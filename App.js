@@ -22,6 +22,7 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text>Hello</Text>
+        <Text>{firebase.database().app.name}</Text>
       </View>
     );
   }
