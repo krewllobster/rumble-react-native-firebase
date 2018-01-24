@@ -1,4 +1,4 @@
-package com.invertase.rnfirebasestarter;
+package com.rumblesum.rumblesum;
 
 import android.app.Application;
 
