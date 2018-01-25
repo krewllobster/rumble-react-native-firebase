@@ -18,8 +18,7 @@ export const Tabs = TabNavigator({
   counter: {
     screen: Counter,
     navigationOptions: {
-      tabBarLabel: 'Counter',
-      title: 'Counter'
+      tabBarLabel: 'Counter'
     }
   },
   logout: {

@@ -93,7 +93,7 @@ const navigationReducer = (state = initialState, action) => {
         stateForLoggedOut: AppNavigator.router.getStateForAction(
           NavigationActions.reset({
             index: 0,
-            actions: [NavigationActions.init({ routeName: 'login' })]
+            actions: [NavigationActions.navigate({ routeName: 'login' })]
           })
         )
       };
