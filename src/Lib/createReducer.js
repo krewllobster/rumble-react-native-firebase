@@ -3,7 +3,7 @@ export default function createReducer(initialState, handlers) {
     if (handlers.hasOwnProperty(action.type)) {
       return handlers[action.type](state, action);
     } else {
-      return state;
+      return handlers['default'](state, action);
     }
   };
 }
