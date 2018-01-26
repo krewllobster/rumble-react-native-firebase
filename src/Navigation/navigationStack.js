@@ -12,10 +12,17 @@ import Feed from '../Components/Feed';
 import Notification from '../Components/Notification';
 import Signup from '../Components/SignupScreen';
 import Drawer from '../Components/Drawer';
+import Company from '../Components/Company';
+
+export const feedStack = StackNavigator({
+  feed: {
+    screen: Feed
+  }
+});
 
 export const Tabs = TabNavigator({
   feed: {
-    screen: Feed,
+    screen: feedStack,
     navigationOptions: {
       tabBarLabel: 'Feed',
       title: 'Feed'
@@ -54,6 +61,7 @@ const TabsWithDrawer = DrawerNavigator(
     }
   },
   {
+    headerMode: 'screen',
     contentComponent: props => <Drawer {...props} />
   }
 );
@@ -85,6 +93,9 @@ const navigator = StackNavigator(
         gesturesEnabled: false,
         headerLeft: null
       }
+    },
+    company: {
+      screen: Company
     }
   },
   {
