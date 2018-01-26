@@ -13,13 +13,15 @@ import loginReducer from './src/Reducers/loginReducer';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 
-const loggerMiddleware = createLogger({
-  predicate: (getState, action) => __DEV__
-});
+import RNFirebase from 'react-native-firebase';
 
-const enhancer = compose(applyMiddleware(thunkMiddleware, loggerMiddleware));
+import {
+  reactReduxFirebase,
+  firebaseStateReducer,
+  getFirebase
+} from 'react-redux-firebase';
+import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 
-// config to not persist the *counterString* of the CounterReducer's slice of the global state.
 const config = {
   key: 'root',
   storage,
@@ -49,11 +51,58 @@ const LoginReducer = persistReducer(config1, loginReducer);
 const rootReducer = combineReducers({
   CounterReducer,
   NavigationReducer,
-  LoginReducer
+  LoginReducer,
+  firebase: firebaseStateReducer,
+  firestore: firestoreReducer
 });
 
-function configureStore() {
-  let store = createStore(rootReducer, undefined, enhancer);
+const reactNativeFirebaseConfig = {
+  debug: true,
+  enableRedirectHandling: false
+};
+
+const reduxFirebaseConfig = {
+  userProfile: 'users',
+  useFirestoreForProfile: true,
+  enableRedirectHandling: false
+};
+
+function configureStore(initialState = { firebase: {}, firestore: {} }) {
+  const firebase = RNFirebase.initializeApp(reactNativeFirebaseConfig);
+  firebase.firestore();
+  //Reducer Config
+  // ===============
+
+  // config to not persist the *counterString* of the CounterReducer's slice of the global state.
+
+  //Middleware Configuration
+  //=======================================
+  const loggerMiddleware = createLogger({
+    predicate: (getState, action) => __DEV__
+  });
+
+  const middleware = [
+    thunkMiddleware.withExtraArgument(getFirebase),
+    loggerMiddleware
+  ];
+
+  // =======================================
+  // Store Enhancers
+  // =======================================
+  const enhancers = [];
+
+  //Initialize Firebase and Firestore
+
+  let store = createStore(
+    rootReducer,
+    initialState,
+    compose(
+      reactReduxFirebase(firebase, reduxFirebaseConfig),
+      reduxFirestore(firebase),
+      applyMiddleware(...middleware),
+      ...enhancers
+    )
+  );
   let persistor = persistStore(store);
   return { persistor, store };
 }

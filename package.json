@@ -22,14 +22,18 @@
   },
   "dependencies": {
     "fbjs": "^0.8.16",
+    "firebase": "^4.9.0",
     "native-base": "^2.3.7",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-native": "^0.52.1",
     "react-native-firebase": "^3.2.2",
+    "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.0.0-beta.27",
     "react-redux": "^5.0.6",
     "react-redux-firebase": "^2.0.2",
     "redux": "^3.7.2",
+    "redux-firestore": "^0.2.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.5.0",
     "redux-thunk": "^2.2.0"

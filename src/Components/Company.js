@@ -17,33 +17,24 @@ import {
 } from 'native-base';
 import { firestoreConnect } from 'react-redux-firebase';
 import createCompany from '../Factories/Company';
-import HeaderButton from './HeaderButton';
 
-class Feed extends Component {
+class Company extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     let x = createCompany({ name: 'my company' });
     return (
       <Container>
-        <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <Content padder>
           <Card>
             <CardItem>
               <Body>
-                <Text>Chat App to talk some awesome people!</Text>
+                <Text>Company Details</Text>
               </Body>
             </CardItem>
           </Card>
-          <Button onPress={() => navigate('DrawerOpen')}>
-            <Text>Open Drawer</Text>
-          </Button>
-          <Button onPress={() => navigate('company')}>
-            <Text>Open Company</Text>
-          </Button>
         </Content>
       </Container>
     );
@@ -55,4 +46,4 @@ export default compose(
   connect((state, props) => ({
     firestore: state.firestore
   }))
-)(Feed);
+)(Company);

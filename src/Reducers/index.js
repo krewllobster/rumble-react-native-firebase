@@ -3,8 +3,7 @@ import CounterReducer from './counterReducer';
 import NavigationReducer from './navigationReducer';
 
 const AppReducer = combineReducers({
-  CounterReducer,
-  NavigationReducer
+  CounterReducer
 });
 
 export default AppReducer;
