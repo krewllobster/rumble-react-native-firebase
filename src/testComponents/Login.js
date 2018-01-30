@@ -69,7 +69,7 @@ class Login extends Component {
               </Item>
             </Form>
             <Content padding={10}>
-              <Button block onPress={() => this.login()}>
+              <Button block onPress={() => navigate('SignedIn')}>
                 <Text>Sign In</Text>
               </Button>
             </Content>

@@ -118,11 +118,30 @@ const mainStack = StackNavigator(
   }
 );
 
-const rootStack = DrawerNavigator({
-  Login: { screen: Login },
-  Register: { screen: Register },
+const SignedIn = DrawerNavigator({
   Main: { screen: mainStack, navigationOptions: { title: 'Main Stuff' } }
 });
+
+const SignedOut = StackNavigator(
+  {
+    Login: { screen: Login },
+    Register: { screen: Register }
+  },
+  {
+    headerMode: 'none'
+  }
+);
+
+const rootStack = StackNavigator(
+  {
+    SignedIn: { screen: SignedIn },
+    SignedOut: { screen: SignedOut }
+  },
+  {
+    initialRouteName: 'SignedOut',
+    headerMode: 'none'
+  }
+);
 
 export default rootStack;
 
