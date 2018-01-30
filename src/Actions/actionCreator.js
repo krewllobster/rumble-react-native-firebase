@@ -4,7 +4,10 @@ import {
   Login,
   Logout,
   Register,
+  LoginSuccess,
+  LoginFailure,
   RegisterSuccess,
+  RegisterFailure,
   NavigateToLogoutScreen
 } from './actionTypes';
 
@@ -28,13 +31,61 @@ const register = () => ({
   type: Register
 });
 
-const registerSuccess = () => ({
-  type: RegisterSuccess
+const loginSuccess = userData => ({
+  type: LoginSuccess,
+  userData
+});
+
+const loginFailure = error => ({
+  type: LoginFailure,
+  error
+});
+
+const registerSuccess = userData => ({
+  type: RegisterSuccess,
+  userData
+});
+
+const registerFailure = error => ({
+  type: RegisterFailure,
+  error
 });
 
 const navigateToLogoutScreen = () => ({
   type: NavigateToLogoutScreen
 });
+
+export const submitRegistration = ({ credentials, profile }) => (
+  dispatch,
+  getState,
+  getFirebase
+) => {
+  const firebase = getFirebase();
+  firebase
+    .createUser(credentials, profile)
+    .then(userData => {
+      dispatch(registerSuccess(userData));
+    })
+    .catch(error => {
+      dispatch(registerFailure(error));
+    });
+};
+
+export const submitLogin = ({ credentials }) => (
+  dispatch,
+  getState,
+  getFirebase
+) => {
+  const firebase = getFirebase();
+  firebase
+    .login(credentials)
+    .then(userData => {
+      dispatch(loginSuccess(userData));
+    })
+    .catch(error => {
+      dispatch(loginFailure(error));
+    });
+};
 
 export {
   incrementAction,
@@ -42,6 +93,5 @@ export {
   login,
   logout,
   register,
-  registerSuccess,
-  navigateToLogoutScreen
+  registerSuccess
 };

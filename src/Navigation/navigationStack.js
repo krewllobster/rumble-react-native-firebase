@@ -1,107 +1,219 @@
 import React from 'react';
+import { Button, Text, Icon } from 'native-base';
 import {
   StackNavigator,
   TabNavigator,
   DrawerNavigator
 } from 'react-navigation';
 
-import Counter from '../Components/Counter';
-import Logout from '../Components/Logout';
-import Login from '../Components/LoginScreen';
-import Feed from '../Components/Feed';
-import Notification from '../Components/Notification';
-import Signup from '../Components/SignupScreen';
-import Drawer from '../Components/Drawer';
-import Company from '../Components/Company';
+import Register from '../testContainers/Register';
+import PeopleList from '../testComponents/PeopleList';
+import Login from '../testContainers/Login';
+import Feed from '../testComponents/Feed';
+import ChallengeList from '../testComponents/ChallengeList';
+import ChallengeDetail from '../testComponents/ChallengeDetail';
+import ChallengeNewButton from '../testComponents/ChallengeNewButton';
+import ChallengeNew from '../testComponents/ChallengeNew';
 
-export const feedStack = StackNavigator({
-  feed: {
-    screen: Feed
-  }
-});
-
-export const Tabs = TabNavigator({
-  feed: {
-    screen: feedStack,
-    navigationOptions: {
-      tabBarLabel: 'Feed',
-      title: 'Feed'
-    }
-  },
-  counter: {
-    screen: Counter,
-    navigationOptions: {
-      tabBarLabel: 'Counter'
-    }
-  },
-  logout: {
-    screen: Logout,
-    navigationOptions: {
-      tabBarLabel: 'Logout',
-      title: 'Logout'
-    }
-  }
-});
-
-const AdminWithDrawer = DrawerNavigator(
+const challengeStack = StackNavigator(
   {
-    Tabs: {
-      screen: Tabs
-    }
-  },
-  {
-    contentComponent: props => <Drawer {...props} />
-  }
-);
-
-const TabsWithDrawer = DrawerNavigator(
-  {
-    Tabs: {
-      screen: Tabs
-    }
-  },
-  {
-    headerMode: 'screen',
-    contentComponent: props => <Drawer {...props} />
-  }
-);
-
-const navigator = StackNavigator(
-  {
-    login: {
-      screen: Login,
-      navigationOptions: {
-        title: 'Login'
-      }
+    ChallengeList: {
+      screen: ChallengeList,
+      navigationOptions: ({ navigation }) => ({
+        title: 'My Challenges',
+        headerRight: (
+          <Button onPress={() => navigation.navigate('ChallengeNew')}>
+            <Text>New</Text>
+          </Button>
+        )
+      })
     },
-    signup: {
-      screen: Signup,
-      navigationOptions: {
-        title: 'Register'
-      }
+    ChallengeDetail: {
+      screen: ChallengeDetail,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.title
+      })
     },
-    admin: {
-      screen: AdminWithDrawer,
+    ChallengeNew: {
+      screen: ChallengeNew,
       navigationOptions: {
-        gesturesEnabled: false,
-        headerLeft: null
+        title: 'New Challenge'
       }
-    },
-    mainScreens: {
-      screen: TabsWithDrawer,
-      navigationOptions: {
-        gesturesEnabled: false,
-        headerLeft: null
-      }
-    },
-    company: {
-      screen: Company
     }
   },
   {
+    initialRouteName: 'ChallengeList',
     mode: 'modal',
-    headerMode: 'none'
+    headerBackTitle: 'Cancel'
   }
 );
 
-export default navigator;
+const mainTabs = TabNavigator(
+  {
+    Feed: {
+      screen: Feed,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Feed',
+        headerLeft: (
+          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+        )
+      })
+    },
+    Challenges: {
+      screen: ChallengeList,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Challenges',
+        headerLeft: (
+          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+        )
+      })
+    },
+    People: {
+      screen: PeopleList,
+      navigationOptions: ({ navigation }) => ({
+        title: 'People',
+        headerLeft: (
+          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+        )
+      })
+    }
+  },
+  {
+    order: ['Feed', 'Challenges', 'People'],
+    initialRouteName: 'Feed',
+    animationEnabled: true,
+    swipeEnabled: true,
+    activeTintColor: '#0044af'
+  }
+);
+
+const mainStack = StackNavigator(
+  {
+    main: { screen: mainTabs },
+    ChallengeDetail: {
+      screen: ChallengeDetail,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.title
+      })
+    },
+    ChallengeNew: {
+      screen: ChallengeNew,
+      navigationOptions: {
+        title: 'New Challenge',
+        headerBackTitle: 'Cancel'
+      }
+    }
+  },
+  {
+    navigationOptions: {
+      initialRouteName: 'mainTabs',
+      mode: 'modal'
+    }
+  }
+);
+
+const rootStack = DrawerNavigator({
+  Login: { screen: Login },
+  Register: { screen: Register },
+  Main: { screen: mainStack, navigationOptions: { title: 'Main Stuff' } }
+});
+
+export default rootStack;
+
+// export const feedStack = StackNavigator({
+//   feed: {
+//     screen: Feed
+//   }
+// });
+
+// export const Tabs = TabNavigator({
+//   feed: {
+//     screen: feedStack,
+//     navigationOptions: {
+//       tabBarLabel: 'Feed',
+//       title: 'Feed'
+//     }
+//   },
+//   counter: {
+//     screen: Counter,
+//     navigationOptions: {
+//       tabBarLabel: 'Counter'
+//     }
+//   },
+//   logout: {
+//     screen: Logout,
+//     navigationOptions: {
+//       tabBarLabel: 'Logout',
+//       title: 'Logout'
+//     }
+//   }
+// });
+
+// const AdminWithDrawer = DrawerNavigator(
+//   {
+//     Tabs: {
+//       screen: Tabs
+//     }
+//   },
+//   {
+//     contentComponent: props => <Drawer {...props} />
+//   }
+// );
+
+// const TabsWithDrawer = DrawerNavigator(
+//   {
+//     Tabs: {
+//       screen: Tabs
+//     }
+//   },
+//   {
+//     headerMode: 'screen',
+//     contentComponent: props => <Drawer {...props} />
+//   }
+// );
+
+// const navigator = StackNavigator(
+//   {
+//     login: {
+//       screen: Login,
+//       navigationOptions: {
+//         title: 'Login'
+//       }
+//     },
+//     signup: {
+//       screen: Signup,
+//       navigationOptions: {
+//         title: 'Register'
+//       }
+//     },
+//     admin: {
+//       screen: AdminWithDrawer,
+//       navigationOptions: {
+//         gesturesEnabled: false,
+//         headerLeft: null
+//       }
+//     },
+//     mainScreens: {
+//       screen: TabsWithDrawer,
+//       navigationOptions: {
+//         gesturesEnabled: false,
+//         headerLeft: null
+//       }
+//     },
+//     company: {
+//       screen: Company
+//     }
+//   },
+//   {
+//     mode: 'modal',
+//     headerMode: 'none'
+//   }
+// );
+
+// export default navigator;

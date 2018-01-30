@@ -8,7 +8,7 @@ import storage from 'redux-persist/es/storage';
 
 import counterReducer from './src/Reducers/counterReducer';
 import NavigationReducer from './src/Reducers/navigationReducer';
-import loginReducer from './src/Reducers/loginReducer';
+import auth from './src/Reducers/auth';
 
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
@@ -36,8 +36,7 @@ const config1 = {
 // Object of all the reducers for redux-persist
 const reducer = {
   counterReducer,
-  NavigationReducer,
-  loginReducer
+  auth
 };
 
 // This will persist all the reducers, but I don't want to persist navigation state, so instead will use persistReducer.
@@ -45,13 +44,13 @@ const reducer = {
 
 // We are only persisting the counterReducer and loginRducer
 const CounterReducer = persistReducer(config, counterReducer);
-const LoginReducer = persistReducer(config1, loginReducer);
+const authReducer = persistReducer(config1, auth);
 
 // combineReducer applied on persisted(counterReducer) and NavigationReducer
 const rootReducer = combineReducers({
   CounterReducer,
-  NavigationReducer,
-  LoginReducer,
+  nav: NavigationReducer,
+  authReducer,
   firebase: firebaseStateReducer,
   firestore: firestoreReducer
 });

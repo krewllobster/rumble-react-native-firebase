@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { NavigationActions } from "react-navigation";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
-import { login, register } from "../Actions/actionCreator";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { login, register } from '../Actions/actionCreator';
+import { Button } from 'native-base';
 
 class LoginScreen extends Component {
   static navigationOptions = {
-    title: "Login"
+    title: 'Login'
   };
 
   navigateToRegisterScreen = () => {
@@ -14,11 +15,16 @@ class LoginScreen extends Component {
   };
 
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.rootContainer}>
         <Text style={styles.textStyles}>
           This is a dummy Login Screen, no TextInputs, only Dummy Login button.
         </Text>
+        <Button onPress={() => navigate('mainScreen')}>
+          <Text>Open Main Tabs</Text>
+        </Button>
         <Text style={[styles.textStyles, { marginTop: 10 }]}>
           This is a completely synchronous flow, just for demo.
         </Text>
@@ -31,12 +37,12 @@ class LoginScreen extends Component {
           onPress={this.props.login}
           style={styles.touchableStyles}
         >
-          <Text style={{ color: "white", fontSize: 22 }}>Login</Text>
+          <Text style={{ color: 'white', fontSize: 22 }}>Login</Text>
         </TouchableOpacity>
         <Text
           onPress={this.navigateToRegisterScreen}
           textDecorationLine="underline"
-          style={{ fontSize: 18, fontWeight: "500", marginTop: 10 }}
+          style={{ fontSize: 18, fontWeight: '500', marginTop: 10 }}
         >
           Register
         </Text>
@@ -48,18 +54,18 @@ class LoginScreen extends Component {
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    backgroundColor: "cyan",
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: 'cyan',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textStyles: {
-    textAlign: "center",
-    color: "rgba(0,0,0,0.8)",
+    textAlign: 'center',
+    color: 'rgba(0,0,0,0.8)',
     fontSize: 16
   },
   touchableStyles: {
     marginTop: 15,
-    backgroundColor: "black",
+    backgroundColor: 'black',
     paddingHorizontal: 50,
     paddingVertical: 10,
     borderRadius: 5

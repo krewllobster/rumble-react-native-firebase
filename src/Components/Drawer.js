@@ -7,10 +7,7 @@ export default class Drawer extends Component {
     return (
       <View>
         <Text>Drawer</Text>
-        <Button onPress={() => navigate('admin')} title="Admin" />
-        <Button onPress={() => navigate('counter')} title="Counter" />
-        <Button onPress={() => navigate('feed')} title="Feed" />
-        <Button onPress={() => navigate('DrawerClose')} title="Close Me" />
+        {/* <Button onPress={() => navigate('DrawerClose')} title="Close Me" /> */}
       </View>
     );
   }
