@@ -7,40 +7,12 @@ import NavigationStack from './navigationStack';
 class App extends React.Component {
   render() {
     const { dispatch, navState, isLoggedIn } = this.props;
-    console.log(navState);
-    // const initialState = NavigationStack.router.getStateForAction(
-    //   NavigationActions.init()
-    // );
-    const signedOutAction = NavigationStack.router.getActionForPathAndParams(
-      'SignedOut'
-      // initialState
-    );
 
-    const signedInAction = NavigationStack.router.getActionForPathAndParams(
-      'SignedIn'
-      // initialState
-    );
-
-    const signedOutState = NavigationStack.router.getStateForAction(
-      signedOutAction
-      // initialState
-    );
-    console.log('hi');
-    console.log(signedOutAction);
-    console.log(signedInAction);
-    console.log(signedOutState);
-
-    const signedInState = NavigationStack.router.getStateForAction(
-      signedInAction,
-      signedOutState
-    );
-
-    console.log(signedInState);
     return (
       <NavigationStack
         navigation={addNavigationHelpers({
           dispatch: this.props.dispatch,
-          state: this.props.navState
+          state: navState
         })}
       />
     );

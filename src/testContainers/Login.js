@@ -6,7 +6,7 @@ import { submitLogin } from '../Actions/actionCreator';
 import Login from '../testComponents/Login';
 
 const mapStateToProps = state => ({
-  auth: state.authReducer
+  auth: state.auth
 });
 
 const mapDispatchToProps = {

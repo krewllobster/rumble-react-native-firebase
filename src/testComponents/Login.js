@@ -46,6 +46,7 @@ class Login extends Component {
         </Header>
         <Container>
           <Content>
+            <Text>{JSON.stringify(this.props.auth.isLoggedIn)}</Text>
             <Form>
               <Item fixedLabel>
                 <Label>Email</Label>
@@ -69,7 +70,7 @@ class Login extends Component {
               </Item>
             </Form>
             <Content padding={10}>
-              <Button block onPress={() => navigate('SignedIn')}>
+              <Button block onPress={() => this.login()}>
                 <Text>Sign In</Text>
               </Button>
             </Content>

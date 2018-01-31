@@ -11,39 +11,30 @@ import AppNavigator from '../Navigation/navigationStack';
 // const initialState = NavigationStack.router.getStateForAction(
 //   NavigationActions.init()
 // );
+let initialState = AppNavigator.router.getStateForAction(
+  NavigationActions.init()
+);
 
 const actionWhileLoggedOut = AppNavigator.router.getActionForPathAndParams(
-  'SignedOut',
-  initialState
+  'SignedOut'
+  // initialState
 );
 
 const actionWhileLoggedIn = AppNavigator.router.getActionForPathAndParams(
   'SignedIn'
 );
 
-const stateWhileLoggedOut = AppNavigator.router.getStateForAction(
-  actionWhileLoggedOut
+const stateForLoggedOut = AppNavigator.router.getStateForAction(
+  actionWhileLoggedOut,
+  initialState
 );
 
-// const stateWhileLoggedIn = AppNavigator.router.getStateForAction(
-//   actionWhileLoggedIn,
-//   stateWhileLoggedOut
-// );
-
-// const stateForLoggedOut = AppNavigator.router.getStateForAction(
-//   ActionForLoggedOut
-// );
-
-// const stateForLoggedIn = AppNavigator.router.getStateForAction(
-//   ActionForLoggedIn,
-//   stateForLoggedOut
-// );
-
-// const initialState = { stateForLoggedOut, stateForLoggedIn };
-
-const initialState = AppNavigator.router.getStateForAction(
-  NavigationActions.init()
+const stateForLoggedIn = AppNavigator.router.getStateForAction(
+  actionWhileLoggedIn,
+  stateForLoggedOut
 );
+
+// initialState = { stateForLoggedOut, stateForLoggedIn };
 
 const navigationReducer = (state = initialState, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);
