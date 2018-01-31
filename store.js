@@ -50,7 +50,7 @@ const authReducer = persistReducer(config1, auth);
 const rootReducer = combineReducers({
   CounterReducer,
   nav: NavigationReducer,
-  authReducer,
+  auth: authReducer,
   firebase: firebaseStateReducer,
   firestore: firestoreReducer
 });

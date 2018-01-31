@@ -8,13 +8,26 @@ import AppNavigator from '../Navigation/navigationStack';
 //   RegisterSuccess,
 //   NavigateToLogoutScreen
 // } from '../Actions/actionTypes';
-
-// const ActionForLoggedOut = AppNavigator.router.getActionForPathAndParams(
-//   'login'
+// const initialState = NavigationStack.router.getStateForAction(
+//   NavigationActions.init()
 // );
 
-// const ActionForLoggedIn = AppNavigator.router.getActionForPathAndParams(
-//   'mainScreens'
+const actionWhileLoggedOut = AppNavigator.router.getActionForPathAndParams(
+  'SignedOut',
+  initialState
+);
+
+const actionWhileLoggedIn = AppNavigator.router.getActionForPathAndParams(
+  'SignedIn'
+);
+
+const stateWhileLoggedOut = AppNavigator.router.getStateForAction(
+  actionWhileLoggedOut
+);
+
+// const stateWhileLoggedIn = AppNavigator.router.getStateForAction(
+//   actionWhileLoggedIn,
+//   stateWhileLoggedOut
 // );
 
 // const stateForLoggedOut = AppNavigator.router.getStateForAction(
