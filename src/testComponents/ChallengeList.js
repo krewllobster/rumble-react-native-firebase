@@ -39,7 +39,8 @@ class ChallengeList extends Component {
                       onPress={() =>
                         navigate('ChallengeDetail', {
                           title: item.name,
-                          id: item.id
+                          id: item.id,
+                          challenge: item
                         })
                       }
                     >
@@ -65,14 +66,15 @@ class ChallengeList extends Component {
   }
 }
 
-export default compose(
-  firestoreConnect(props => [
-    { collection: 'challenges' } // or `todos/${props.todoId}`
-  ]),
-  connect(({ firestore: { ordered } }, props) => ({
-    challenges: ordered.challenges
-  }))
-)(ChallengeList);
+export default ChallengeList;
+// export default compose(
+//   firestoreConnect(props => [
+//     { collection: 'challenges' } // or `todos/${props.todoId}`
+//   ]),
+//   connect(({ firestore: { ordered } }, props) => ({
+//     challenges: ordered.challenges
+//   }))
+// )(ChallengeList);
 
 // export default compose(
 //   firestoreConnect(['challenges']),

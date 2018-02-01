@@ -6,7 +6,7 @@ import { submitLogin } from '../Actions/actionCreator';
 import Login from '../testComponents/Login';
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.firebase.auth
 });
 
 const mapDispatchToProps = {

@@ -49,20 +49,19 @@ const authReducer = persistReducer(config1, auth);
 // combineReducer applied on persisted(counterReducer) and NavigationReducer
 const rootReducer = combineReducers({
   nav: NavigationReducer,
-  auth: authReducer,
   firebase: firebaseStateReducer,
   firestore: firestoreReducer
 });
 
 const reactNativeFirebaseConfig = {
-  debug: true,
-  enableRedirectHandling: false
+  debug: true
 };
 
 const reduxFirebaseConfig = {
-  userProfile: 'users',
-  useFirestoreForProfile: true,
+  // userProfile: 'users',
+  // useFirestoreForProfile: true,
   enableRedirectHandling: false
+  // resetBeforeLogin: false
 };
 
 function configureStore(initialState = { firebase: {}, firestore: {} }) {

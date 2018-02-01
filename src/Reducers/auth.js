@@ -11,6 +11,9 @@ import createReducer from '../Lib/createReducer';
 const initialState = { isLoggedIn: false, error: {}, userData: {} };
 
 const authReducer = createReducer(initialState, {
+  [Logout](state, action) {
+    return { ...initialState };
+  },
   [LoginSuccess](state, action) {
     return { ...initialState, isLoggedIn: true, userData: action.userData };
   },

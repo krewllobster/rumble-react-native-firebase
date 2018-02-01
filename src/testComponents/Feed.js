@@ -9,14 +9,8 @@ class Feed extends Component {
         <Button onPress={() => this.props.navigation.navigate('DrawerOpen')}>
           <Text>Open Drawer</Text>
         </Button>
-        <Button
-          onPress={() =>
-            this.props.navigation.navigate('ChallengeDetail', {
-              title: 'Second Challenge'
-            })
-          }
-        >
-          <Text>Open Second Challenge</Text>
+        <Button onPress={() => this.props.initLogout()}>
+          <Text>Logout</Text>
         </Button>
       </Container>
     );

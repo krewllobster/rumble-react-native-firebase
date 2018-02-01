@@ -20,11 +20,11 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-          <Root>
-            <AppNavigation />
-          </Root>
-        </PersistGate>
+        {/* <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}> */}
+        <Root>
+          <AppNavigation />
+        </Root>
+        {/* </PersistGate> */}
       </Provider>
     );
   }

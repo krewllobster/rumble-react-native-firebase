@@ -17,6 +17,7 @@ import {
   Image,
   Toast
 } from 'native-base';
+
 import { Keyboard } from 'react-native';
 
 class Register extends Component {
@@ -32,10 +33,10 @@ class Register extends Component {
     };
   }
 
-  componentDidUpdate(props) {
-    if (props.auth.error.code) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.authError && nextProps.authError.message) {
       Toast.show({
-        text: props.auth.error.code,
+        text: nextProps.authError.message,
         position: 'top',
         buttonText: 'Hide',
         type: 'danger',
@@ -51,27 +52,21 @@ class Register extends Component {
   register() {
     Keyboard.dismiss();
     const { email, password, firstName, lastName } = this.state;
-    const credentials = { email, password, signIn: true };
-    const profile = { firstName, lastName, email };
-    this.props.submitRegistration({ credentials, profile });
+    const credentials = { email, password, signIn: false };
+    const profile = { email, username: `${firstName} ${lastName}` };
+    this.props.submitRegistration(credentials, profile);
   }
 
   render() {
     const { navigate } = this.props.navigation;
-    const {
-      email,
-      password,
-      firstName,
-      lastName,
-      passwordConfirm
-    } = this.state;
+    const { email, password, firstName, lastName } = this.state;
     return (
       <Container>
-        <Header>
+        {/* <Header>
           <Body>
             <Title>Rumblesum</Title>
           </Body>
-        </Header>
+        </Header> */}
         <Container>
           <Content padder>
             <Form>
@@ -79,6 +74,7 @@ class Register extends Component {
                 <Label>First Name</Label>
                 <Input
                   autoCapitalize="none"
+                  autoCorrect={false}
                   value={firstName}
                   onChangeText={t => this.setState({ firstName: t })}
                 />
@@ -87,6 +83,7 @@ class Register extends Component {
                 <Label>Last Name</Label>
                 <Input
                   autoCapitalize="none"
+                  autoCorrect={false}
                   keyboardType="default"
                   value={lastName}
                   onChangeText={t => this.setState({ lastName: t })}
@@ -113,15 +110,12 @@ class Register extends Component {
                 />
               </Item>
             </Form>
-            <Button block onPress={() => this.register()}>
-              <Text>Register</Text>
-            </Button>
             <Button
-              style={{ marginTop: 10 }}
+              disabled={!email || !password || !firstName || !lastName}
               block
-              onPress={() => navigate('Login')}
+              onPress={() => this.register()}
             >
-              <Text>Sign In</Text>
+              <Text>Register</Text>
             </Button>
           </Content>
         </Container>

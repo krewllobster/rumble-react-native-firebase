@@ -11,7 +11,7 @@ class ChallengeDetail extends Component {
   }
 
   render() {
-    const { description, id } = this.props.challenge;
+    const { description, id } = this.props.navigation.stat.params.challenge;
     return (
       <Container>
         <Text>Description:</Text>
@@ -21,6 +21,7 @@ class ChallengeDetail extends Component {
   }
 }
 
-export default connect((state, props) => ({
-  challenge: state.firestore.data.challenges[props.navigation.state.params.id]
-}))(ChallengeDetail);
+export default ChallengeDetail;
+// export default connect((state, props) => ({
+//   challenge: state.firestore.data.challenges[props.navigation.state.params.id]
+// }))(ChallengeDetail);

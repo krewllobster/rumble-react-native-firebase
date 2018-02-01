@@ -14,17 +14,22 @@ import {
   Input,
   Card,
   CardItem,
-  Image
+  Image,
+  Spinner
 } from 'native-base';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
+      loading: false,
       email: '',
       password: ''
     };
+  }
+
+  componentWillMount() {
+    this.setState({ loading: false });
   }
 
   login() {
@@ -32,55 +37,68 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password
     };
+    this.setState({
+      loading: true
+    });
     this.props.submitLogin({ credentials });
+    this.setState({
+      loading: false
+    });
   }
+
   render() {
     const { navigate } = this.props.navigation;
-    const { email, password } = this.state;
+    const { email, password, loading } = this.state;
+    const LoginForm = (
+      <Content padder>
+        <Form>
+          <Item fixedLabel>
+            <Label>Email</Label>
+            <Input
+              autoCapitalize="none"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={text => this.setState({ email: text })}
+            />
+          </Item>
+          <Item fixedLabel last>
+            <Label>Password</Label>
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              password={true}
+              value={password}
+              onChangeText={text => this.setState({ password: text })}
+            />
+          </Item>
+        </Form>
+        <Button block style={{ marginTop: 10 }} onPress={() => this.login()}>
+          <Text>Sign In</Text>
+        </Button>
+        <Button
+          block
+          style={{ marginTop: 10 }}
+          onPress={() => navigate('Register')}
+        >
+          <Text>Register</Text>
+        </Button>
+      </Content>
+    );
     return (
       <Container>
-        <Header>
+        {/* <Header>
           <Body>
             <Title>Rumblesum</Title>
           </Body>
-        </Header>
-        <Container>
+        </Header> */}
+        {loading ? (
           <Content>
-            <Text>{JSON.stringify(this.props.auth.isLoggedIn)}</Text>
-            <Form>
-              <Item fixedLabel>
-                <Label>Email</Label>
-                <Input
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={text => this.setState({ email: text })}
-                />
-              </Item>
-              <Item fixedLabel last>
-                <Label>Password</Label>
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={true}
-                  password={true}
-                  value={password}
-                  onChangeText={text => this.setState({ password: text })}
-                />
-              </Item>
-            </Form>
-            <Content padding={10}>
-              <Button block onPress={() => this.login()}>
-                <Text>Sign In</Text>
-              </Button>
-            </Content>
-            <Content padding={10}>
-              <Button block onPress={() => navigate('Register')}>
-                <Text>Register</Text>
-              </Button>
-            </Content>
+            <Spinner />
           </Content>
-        </Container>
+        ) : (
+          LoginForm
+        )}
       </Container>
     );
   }

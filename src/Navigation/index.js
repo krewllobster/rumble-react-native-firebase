@@ -6,13 +6,17 @@ import NavigationStack from './navigationStack';
 
 class App extends React.Component {
   render() {
-    const { dispatch, navState, isLoggedIn } = this.props;
-
+    const { dispatch, navState, auth } = this.props;
+    const isLoggedIn =
+      auth && !auth.isEmpty && !auth.authError && auth.isLoaded;
+    const state = isLoggedIn
+      ? navState.stateForLoggedIn
+      : navState.stateForLoggedOut;
     return (
       <NavigationStack
         navigation={addNavigationHelpers({
           dispatch: this.props.dispatch,
-          state: navState
+          state
         })}
       />
     );
@@ -21,7 +25,7 @@ class App extends React.Component {
 
 const mapStateToProps = state => ({
   navState: state.nav,
-  isLoggedIn: state.auth.isLoggedIn
+  auth: state.firebase.auth
 });
 
 const AppWithNavigationState = connect(mapStateToProps)(App);

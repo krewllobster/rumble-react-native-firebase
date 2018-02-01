@@ -6,10 +6,11 @@ import {
   DrawerNavigator
 } from 'react-navigation';
 
+import Drawer from '../Components/Drawer';
 import Register from '../testContainers/Register';
 import PeopleList from '../testComponents/PeopleList';
 import Login from '../testContainers/Login';
-import Feed from '../testComponents/Feed';
+import Feed from '../testContainers/Feed';
 import ChallengeList from '../testComponents/ChallengeList';
 import ChallengeDetail from '../testComponents/ChallengeDetail';
 import ChallengeNewButton from '../testComponents/ChallengeNewButton';
@@ -124,11 +125,17 @@ const SignedIn = DrawerNavigator({
 
 const SignedOut = StackNavigator(
   {
-    Login: { screen: Login },
-    Register: { screen: Register }
+    Login: {
+      screen: Login,
+      navigationOptions: { title: 'Rumblesum', headerBackTitle: null }
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: { title: 'Rumblesum', headerBackTitle: null }
+    }
   },
   {
-    headerMode: 'none'
+    headerMode: 'float'
   }
 );
 
