@@ -10,13 +10,27 @@ import {
   Radio,
   List,
   Footer,
-  FooterTab
+  FooterTab,
+  DeckSwiper,
+  View,
+  Icon,
+  Card,
+  CardItem,
+  Left,
+  Thumbnail,
+  Body
 } from 'native-base';
 
 import ChallengeModel from '../Factories/Challenge';
 import CreateForm from './CreateForm';
 import { challengeSchema } from '../Factories/ChallengeFactory';
 
+const cards = [
+  {
+    text: 'Card One',
+    name: 'One'
+  }
+];
 class ChallengeNew extends Component {
   constructor(props) {
     super(props);
@@ -170,7 +184,43 @@ class ChallengeNew extends Component {
   render() {
     const { index } = this.state;
     const screens = [this.selectParticipantType(), this.setWinCondition()];
-    return <Container>{screens[index]}</Container>;
+    // return <Container>{screens[index]}</Container>;
+    return (
+      <Container>
+        <Content>
+          <DeckSwiper
+            ref={c => (this._deckSwiper = c)}
+            dataSource={screens}
+            renderEmpty={() => (
+              <View style={{ alignSelf: 'center' }}>
+                <Text>Over</Text>
+              </View>
+            )}
+            renderItem={item => item}
+          />
+        </Content>
+        <Footer>
+          <FooterTab>
+            <Button
+              full
+              iconLeft
+              onPress={() => this._deckSwiper._root.swipeLeft()}
+            >
+              <Text>Back</Text>
+            </Button>
+          </FooterTab>
+          <FooterTab icon="arrow-forward">
+            <Button
+              full
+              iconRight
+              onPress={() => this._deckSwiper._root.swipeRight()}
+            >
+              <Text>Next</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
+    );
   }
 }
 
