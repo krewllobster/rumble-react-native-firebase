@@ -70,7 +70,7 @@ class Register extends Component {
         <Container>
           <Content padder>
             <Form>
-              <Item fixedLabel>
+              <Item floatingLabel>
                 <Label>First Name</Label>
                 <Input
                   autoCapitalize="none"
@@ -79,7 +79,7 @@ class Register extends Component {
                   onChangeText={t => this.setState({ firstName: t })}
                 />
               </Item>
-              <Item fixedLabel>
+              <Item floatingLabel>
                 <Label>Last Name</Label>
                 <Input
                   autoCapitalize="none"
@@ -89,7 +89,7 @@ class Register extends Component {
                   onChangeText={t => this.setState({ lastName: t })}
                 />
               </Item>
-              <Item fixedLabel>
+              <Item floatingLabel>
                 <Label>Email</Label>
                 <Input
                   autoCapitalize="none"
@@ -99,7 +99,7 @@ class Register extends Component {
                   onChangeText={t => this.setState({ email: t })}
                 />
               </Item>
-              <Item fixedLabel last>
+              <Item floatingLabel last>
                 <Label>Password</Label>
                 <Input
                   autoCapitalize="none"
@@ -109,14 +109,14 @@ class Register extends Component {
                   onChangeText={t => this.setState({ password: t })}
                 />
               </Item>
+              <Button
+                disabled={!email || !password || !firstName || !lastName}
+                block
+                onPress={() => this.register()}
+              >
+                <Text>Register</Text>
+              </Button>
             </Form>
-            <Button
-              disabled={!email || !password || !firstName || !lastName}
-              block
-              onPress={() => this.register()}
-            >
-              <Text>Register</Text>
-            </Button>
           </Content>
         </Container>
       </Container>

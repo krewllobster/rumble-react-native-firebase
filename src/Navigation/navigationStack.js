@@ -11,43 +11,10 @@ import Register from '../testContainers/Register';
 import PeopleList from '../testComponents/PeopleList';
 import Login from '../testContainers/Login';
 import Feed from '../testContainers/Feed';
-import ChallengeList from '../testComponents/ChallengeList';
+import ChallengeList from '../testContainers/ChallengeList';
 import ChallengeDetail from '../testComponents/ChallengeDetail';
 import ChallengeNewButton from '../testComponents/ChallengeNewButton';
 import ChallengeNew from '../testComponents/ChallengeNew';
-
-const challengeStack = StackNavigator(
-  {
-    ChallengeList: {
-      screen: ChallengeList,
-      navigationOptions: ({ navigation }) => ({
-        title: 'My Challenges',
-        headerRight: (
-          <Button onPress={() => navigation.navigate('ChallengeNew')}>
-            <Text>New</Text>
-          </Button>
-        )
-      })
-    },
-    ChallengeDetail: {
-      screen: ChallengeDetail,
-      navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.title
-      })
-    },
-    ChallengeNew: {
-      screen: ChallengeNew,
-      navigationOptions: {
-        title: 'New Challenge'
-      }
-    }
-  },
-  {
-    initialRouteName: 'ChallengeList',
-    mode: 'modal',
-    headerBackTitle: 'Cancel'
-  }
-);
 
 const mainTabs = TabNavigator(
   {
@@ -98,10 +65,7 @@ const mainStack = StackNavigator(
   {
     main: { screen: mainTabs },
     ChallengeDetail: {
-      screen: ChallengeDetail,
-      navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.title
-      })
+      screen: ChallengeDetail
     },
     ChallengeNew: {
       screen: ChallengeNew,
@@ -151,95 +115,3 @@ const rootStack = StackNavigator(
 );
 
 export default rootStack;
-
-// export const feedStack = StackNavigator({
-//   feed: {
-//     screen: Feed
-//   }
-// });
-
-// export const Tabs = TabNavigator({
-//   feed: {
-//     screen: feedStack,
-//     navigationOptions: {
-//       tabBarLabel: 'Feed',
-//       title: 'Feed'
-//     }
-//   },
-//   counter: {
-//     screen: Counter,
-//     navigationOptions: {
-//       tabBarLabel: 'Counter'
-//     }
-//   },
-//   logout: {
-//     screen: Logout,
-//     navigationOptions: {
-//       tabBarLabel: 'Logout',
-//       title: 'Logout'
-//     }
-//   }
-// });
-
-// const AdminWithDrawer = DrawerNavigator(
-//   {
-//     Tabs: {
-//       screen: Tabs
-//     }
-//   },
-//   {
-//     contentComponent: props => <Drawer {...props} />
-//   }
-// );
-
-// const TabsWithDrawer = DrawerNavigator(
-//   {
-//     Tabs: {
-//       screen: Tabs
-//     }
-//   },
-//   {
-//     headerMode: 'screen',
-//     contentComponent: props => <Drawer {...props} />
-//   }
-// );
-
-// const navigator = StackNavigator(
-//   {
-//     login: {
-//       screen: Login,
-//       navigationOptions: {
-//         title: 'Login'
-//       }
-//     },
-//     signup: {
-//       screen: Signup,
-//       navigationOptions: {
-//         title: 'Register'
-//       }
-//     },
-//     admin: {
-//       screen: AdminWithDrawer,
-//       navigationOptions: {
-//         gesturesEnabled: false,
-//         headerLeft: null
-//       }
-//     },
-//     mainScreens: {
-//       screen: TabsWithDrawer,
-//       navigationOptions: {
-//         gesturesEnabled: false,
-//         headerLeft: null
-//       }
-//     },
-//     company: {
-//       screen: Company
-//     }
-//   },
-//   {
-//     mode: 'modal',
-//     headerMode: 'none'
-//   }
-// );
-
-// export default navigator;

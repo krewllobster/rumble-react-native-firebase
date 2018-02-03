@@ -8,23 +8,23 @@ import {
 } from '../Actions/actionTypes';
 import createReducer from '../Lib/createReducer';
 
-const initialState = { isLoggedIn: false, error: {}, userData: {} };
+const initialState = { isLoggedIn: false };
 
 const authReducer = createReducer(initialState, {
   [Logout](state, action) {
-    return { ...initialState };
+    return { isLoggedIn: false };
   },
   [LoginSuccess](state, action) {
-    return { ...initialState, isLoggedIn: true, userData: action.userData };
+    return { isLoggedIn: true };
   },
   [LoginFailure](state, action) {
-    return { ...initialState, error: action.error };
+    return { isLoggedIn: false };
   },
   [RegisterSuccess](state, action) {
-    return { ...initialState, userData: action.userData, isLoggedIn: true };
+    return { isLoggedIn: true };
   },
   [RegisterFailure](state, action) {
-    return { ...initialState, isLoggedIn: false, error: action.error };
+    return { isLoggedIn: false };
   },
   default(state, action) {
     return state;

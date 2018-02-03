@@ -22,29 +22,22 @@ import {
 } from 'react-redux-firebase';
 import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 
-const config = {
-  key: 'root',
-  storage,
-  blacklist: ['counterString']
-};
+// const config = {
+//   key: 'root',
+//   storage,
+//   blacklist: ['counterString']
+// };
 
-const config1 = {
-  key: 'primary',
-  storage
-};
+// const config1 = {
+//   key: 'primary',
+//   storage
+// };
 
-// Object of all the reducers for redux-persist
-const reducer = {
-  counterReducer,
-  auth
-};
-
-// This will persist all the reducers, but I don't want to persist navigation state, so instead will use persistReducer.
-// const rootReducer = persistCombineReducers(config, reducer)
-
-// We are only persisting the counterReducer and loginRducer
-const CounterReducer = persistReducer(config, counterReducer);
-const authReducer = persistReducer(config1, auth);
+// // Object of all the reducers for redux-persist
+// const reducer = {
+//   counterReducer,
+//   auth
+// };
 
 // combineReducer applied on persisted(counterReducer) and NavigationReducer
 const rootReducer = combineReducers({
@@ -58,10 +51,10 @@ const reactNativeFirebaseConfig = {
 };
 
 const reduxFirebaseConfig = {
-  // userProfile: 'users',
-  // useFirestoreForProfile: true,
-  enableRedirectHandling: false
-  // resetBeforeLogin: false
+  userProfile: 'users',
+  useFirestoreForProfile: true,
+  enableRedirectHandling: false,
+  resetBeforeLogin: false
 };
 
 function configureStore(initialState = { firebase: {}, firestore: {} }) {

@@ -12,7 +12,12 @@ import {
   Fab,
   Icon,
   View,
-  Spinner
+  Spinner,
+  Content,
+  Card,
+  CardItem,
+  Right,
+  Body
 } from 'native-base';
 
 class ChallengeList extends Component {
@@ -20,36 +25,61 @@ class ChallengeList extends Component {
     super(props);
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Challenges',
+    headerBackTitle: null,
+    headerLeft: (
+      <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+        <Icon name="menu" />
+      </Button>
+    )
+  });
+
   render() {
     const { navigate } = this.props.navigation;
     const { challenges } = this.props;
 
+    const ChallengeCard = ({ challenge }) => {
+      return (
+        <Card key={challenge.id}>
+          <CardItem header>
+            <Text>{challenge.name}</Text>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Text>{challenge.description}</Text>
+            </Body>
+            <Right>
+              <Button
+                onPress={() =>
+                  navigate('ChallengeDetail', {
+                    challenge: challenge
+                  })
+                }
+              >
+                <Text>Details</Text>
+              </Button>
+            </Right>
+          </CardItem>
+        </Card>
+      );
+    };
+
     return (
       <Container>
         <View flex={1}>
-          {!challenges ? (
-            <Spinner />
-          ) : (
-            <List>
-              {challenges &&
-                challenges.map(item => {
-                  return (
-                    <ListItem
-                      key={item.name}
-                      onPress={() =>
-                        navigate('ChallengeDetail', {
-                          title: item.name,
-                          id: item.id,
-                          challenge: item
-                        })
-                      }
-                    >
-                      <Text>{item.name}</Text>
-                    </ListItem>
-                  );
-                })}
-            </List>
-          )}
+          <Content padder>
+            {!challenges ? (
+              <Spinner />
+            ) : (
+              <List>
+                {challenges &&
+                  challenges.map(item => {
+                    return <ChallengeCard key={item.id} challenge={item} />;
+                  })}
+              </List>
+            )}
+          </Content>
 
           <Fab
             active={true}
@@ -67,18 +97,3 @@ class ChallengeList extends Component {
 }
 
 export default ChallengeList;
-// export default compose(
-//   firestoreConnect(props => [
-//     { collection: 'challenges' } // or `todos/${props.todoId}`
-//   ]),
-//   connect(({ firestore: { ordered } }, props) => ({
-//     challenges: ordered.challenges
-//   }))
-// )(ChallengeList);
-
-// export default compose(
-//   firestoreConnect(['challenges']),
-//   connect((state, props) => ({
-//     challenges: state.firestore.ordered.challenges
-//   }))
-// )(ChallengeList);

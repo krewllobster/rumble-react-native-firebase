@@ -37,13 +37,7 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password
     };
-    this.setState({
-      loading: true
-    });
     this.props.submitLogin({ credentials });
-    this.setState({
-      loading: false
-    });
   }
 
   render() {

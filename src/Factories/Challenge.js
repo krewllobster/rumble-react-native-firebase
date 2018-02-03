@@ -2,18 +2,29 @@ const Challenge = {
   author: {
     type: 'string',
     defaultValue: '',
-    form: false
+    form: { display: false }
   },
   participants: {
     type: 'object',
     defaultValue: {},
-    form: false
+    form: { display: false }
+  },
+  description: {
+    type: 'string',
+    defaultValue: '',
+    form: {
+      display: true,
+      position: 2
+    }
   },
   name: {
     type: 'string',
     defaultValue: '',
     validation: val => val.length < 5,
-    form: true
+    form: {
+      display: true,
+      position: 1
+    }
   }
 };
 

@@ -26,18 +26,19 @@ const elements = {
 const CreateForm = ({ model, onChange, onSubmit }) => {
   return (
     <Form>
-      {Object.keys(model).map(k => {
-        const { defaultValue, form, type, validation } = model[k];
-        return (
-          form && (
+      {Object.entries(model)
+        .filter(([k, v]) => v.form.display)
+        .sort((a, b) => a[1].form.position - b[1].form.position)
+        .map(([k, v]) => {
+          const { defaultValue, form, type, validation } = v;
+          return (
             <Item key={k} floatingLabel>
               <Label>{k}</Label>
               <Input onChangeText={onChange} />
             </Item>
-          )
-        );
-      })}
-      <Button block onPress={onSubmit}>
+          );
+        })}
+      <Button block onPress={onSubmit} style={{ marginTop: 15 }}>
         <Text>Submit</Text>
       </Button>
     </Form>
