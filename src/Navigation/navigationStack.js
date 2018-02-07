@@ -15,6 +15,7 @@ import ChallengeList from '../testContainers/ChallengeList';
 import ChallengeDetail from '../testComponents/ChallengeDetail';
 import ChallengeNewButton from '../testComponents/ChallengeNewButton';
 import ChallengeNew from '../testComponents/ChallengeNew';
+import AddActivities from '../testComponents/AddActivities';
 
 const mainTabs = TabNavigator(
   {
@@ -72,6 +73,13 @@ const mainStack = StackNavigator(
       navigationOptions: {
         title: 'New Challenge',
         headerBackTitle: 'Cancel'
+      }
+    },
+    AddActivities: {
+      screen: AddActivities,
+      navigationOptions: {
+        title: 'Add Activities',
+        headerBackTitle: 'Back'
       }
     }
   },
