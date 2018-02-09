@@ -16,7 +16,8 @@ import {
   Item,
   Label,
   Input,
-  Spinner
+  Spinner,
+  Icon
 } from 'native-base';
 
 class ChallengeDetail extends Component {
@@ -26,29 +27,32 @@ class ChallengeDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.firestore
-      .get({
-        collection: 'challenges',
-        doc: this.props.navigation.state.params.id
-      })
-      .then(response => {
-        this.setState({ challenge: response._data, loading: false });
-      })
-      .catch(error => {
-        this.setState({ challenge: { error } });
-      });
+    const { navigation: { setParams }, challenge: { name } } = this.props;
+    setParams({ name });
   }
+
+  static navigationOptions = ({ navigation }) => {
+    const { name } = navigation.state.params;
+    return {
+      title: !!name ? name : 'no title',
+      headerLeft: (
+        <Button transparent onPress={() => navigation.navigate('Challenges')}>
+          <Icon name="ios-close" />
+        </Button>
+      )
+    };
+  };
 
   render() {
     const { challenge } = this.props;
     return (
       <Container>
         <Content>
-          {!!challenge ? (
+          {!challenge ? (
             <Spinner />
           ) : (
             <Card>
-              <Text>{JSON.stringify(this.state.challenge)}</Text>
+              <Text>{JSON.stringify(this.props.challenge)}</Text>
             </Card>
           )}
         </Content>
@@ -57,4 +61,13 @@ class ChallengeDetail extends Component {
   }
 }
 
-export default withFirestore(ChallengeDetail);
+const mapStateToProps = (state, ownProps) => {
+  const { id } = ownProps.navigation.state.params;
+  return {
+    challenge:
+      !!state.firestore.data.challenges[id] &&
+      state.firestore.data.challenges[id]
+  };
+};
+
+export default connect(mapStateToProps)(ChallengeDetail);

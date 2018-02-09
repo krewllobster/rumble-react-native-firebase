@@ -17,7 +17,10 @@ import {
   Card,
   CardItem,
   Right,
-  Body
+  Body,
+  Header,
+  Left,
+  H3
 } from 'native-base';
 
 class ChallengeList extends Component {
@@ -25,14 +28,13 @@ class ChallengeList extends Component {
     super(props);
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Challenges',
-    headerBackTitle: null,
+  static navigationOptions = ({ navigation, screenProps }) => ({
     headerLeft: (
       <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
         <Icon name="menu" />
       </Button>
-    )
+    ),
+    title: 'Challenges'
   });
 
   render() {
@@ -113,5 +115,10 @@ class ChallengeList extends Component {
     );
   }
 }
-
-export default ChallengeList;
+export default compose(
+  firestoreConnect(['challenges']),
+  connect((state, props) => ({
+    challenges: state.firestore.ordered.challenges
+  }))
+)(ChallengeList);
+// export default ChallengeList;

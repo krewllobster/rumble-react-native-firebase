@@ -11,12 +11,54 @@ import Register from '../testContainers/Register';
 import PeopleList from '../testComponents/PeopleList';
 import Login from '../testContainers/Login';
 import Feed from '../testContainers/Feed';
-import ChallengeList from '../testContainers/ChallengeList';
+import ChallengeList from '../testComponents/ChallengeList';
 import ChallengeDetail from '../testComponents/ChallengeDetail';
 import ChallengeNewButton from '../testComponents/ChallengeNewButton';
 import ChallengeNew from '../testComponents/ChallengeNew';
 import AddActivities from '../testComponents/AddActivities';
 import AddDescription from '../testComponents/AddDescription';
+
+// root {
+//   stack {
+//     signedIn: {
+//       stack: {
+//         tabs: {
+//           mainTabs: {
+//             Feed,
+//             Challenges,
+//             People
+//           }
+//         },
+//         activityDetail,
+//         challengeDetail: {
+//           tabs: {
+//             Details,
+//             LeaderBoard,
+//             Participants
+//           }
+//         },
+//         createChallenge: {
+//           stack: {
+//             challengeNew,
+//             addActivities,
+//             addDescription
+//           }
+//         },
+//         createActivity: {
+//           stack: {
+
+//           }
+//         }
+//       }
+//     },
+//     signedOut: {
+//       stack: {
+//         login,
+//         register
+//       }
+//     }
+//   }
+// }
 
 const mainTabs = TabNavigator(
   {
@@ -32,15 +74,15 @@ const mainTabs = TabNavigator(
       })
     },
     Challenges: {
-      screen: ChallengeList,
-      navigationOptions: ({ navigation }) => ({
-        title: 'Challenges',
-        headerLeft: (
-          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
-            <Icon name="menu" />
-          </Button>
-        )
-      })
+      screen: ChallengeList
+      // navigationOptions: ({ navigation }) => ({
+      //   title: 'Challenges',
+      //   headerLeft: (
+      //     <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+      //       <Icon name="menu" />
+      //     </Button>
+      //   )
+      // })
     },
     People: {
       screen: PeopleList,
@@ -66,15 +108,7 @@ const mainTabs = TabNavigator(
 const challengeTabs = TabNavigator(
   {
     details: {
-      screen: ChallengeDetail,
-      navigationOptions: ({ navigation }) => ({
-        title: JSON.stringify(Object.keys(navigation.state.params)),
-        headerLeft: (
-          <Button transparent onPress={() => navigation.navigate('Challenges')}>
-            <Icon name="ios-close" />
-          </Button>
-        )
-      })
+      screen: ChallengeDetail
     },
     details2: { screen: ChallengeDetail }
   },
