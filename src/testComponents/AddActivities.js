@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   Text,
   Body,
@@ -8,91 +8,130 @@ import {
   Container,
   List,
   ListItem,
-  CheckBox
+  CheckBox,
+  Card,
+  CardItem,
+  Content,
+  Button,
+  Icon,
+  Footer,
+  Title,
+  FooterTab,
+  H3,
+  Separator,
+  Switch
 } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import GridList from 'react-native-grid-list';
+import { View, Dimensions } from 'react-native';
+import ActivitySelect, { listActivitySelect } from '../Forms/ActivitySelect';
+import ItemGrid from '../Lib/ItemGrid';
+import FooterButton from '../Lib/FooterButton';
 
-import { View } from 'react-native';
-import ActivitySelect from '../Forms/ActivitySelect';
+const CheckList = ({ activities, onPress }) => {
+  return (
+    <Content>
+      {activities.map(([k, v]) => {
+        return (
+          <View key={`${k}${v.value}`}>
+            <Separator>
+              <Text>{k.toUpperCase()}</Text>
+            </Separator>
+            {v.map((i, index) => (
+              <ListItem key={i.label} last={index == v.length - 1}>
+                <Body>
+                  <Text>{i.label}</Text>
+                </Body>
+                <Right style={{ width: 100 }}>
+                  <Switch
+                    onValueChange={() =>
+                      onPress({ activity: k, measureType: i.value })
+                    }
+                    value={i.selected}
+                  />
+                </Right>
+              </ListItem>
+            ))}
+          </View>
+        );
+      })}
+    </Content>
+  );
+};
 
-class AddActivities extends Component {
+class AddActivities extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       activityTypes: []
     };
-    this.toggle = this.toggle.bind(this);
-    this.isIn = this.isIn.bind(this);
   }
 
-  isIn({ type, measure }, val) {
-    return type == val.type && measure == val.measure;
-  }
-
-  toggle(val) {
+  toggle = item => {
     this.setState(prevState => {
-      const { activityTypes } = prevState;
-      if (activityTypes.find(i => this.isIn(i, val))) {
+      const selected =
+        prevState.activityTypes.findIndex(i => {
+          return (
+            i.activity == item.activity && i.measureType == item.measureType
+          );
+        }) > -1;
+      if (selected) {
         return {
-          activityTypes: activityTypes.filter(i => !this.isIn(i, val))
+          activityTypes: prevState.activityTypes.filter(i => {
+            return !(
+              i.activity == item.activity && i.measureType == item.measureType
+            );
+          })
         };
       } else {
         return {
-          activityTypes: [...activityTypes, val]
+          activityTypes: prevState.activityTypes.concat(item)
         };
       }
     });
-  }
+  };
 
   render() {
     const { challenge } = this.props.navigation.state.params;
+    const { challengeType, goalMeasureType } = challenge;
+    const { navigate } = this.props.navigation;
+    const { activityTypes } = this.state;
 
-    const activities = Object.entries(ActivitySelect)
-      .filter(([k, v]) => v.type == challenge.challengeType)
-      .map(([k, v]) => ({ name: k, ...v }))
-      .map(i => ({
-        ...i,
-        measures: i.measures.filter(o => o.type == challenge.goalMeasureType)
-      }));
+    const validActivity = ({ activityType, measureType }) => {
+      return activityType == challengeType && measureType == goalMeasureType;
+    };
+
+    const activities = Object.entries(listActivitySelect)
+      .filter(([k, v]) => {
+        return v.some(validActivity);
+      })
+      .map(([k, v]) => {
+        return [k, v.filter(validActivity)];
+      })
+      .map(([k, v]) => {
+        return [
+          k,
+          v.map(i => {
+            const isSelected = !!activityTypes.find(
+              a => a.activity == i.activity && a.measureType == i.value
+            );
+            return { ...i, selected: isSelected };
+          })
+        ];
+      });
 
     return (
       <Container>
-        <Text>{JSON.stringify(this.state.activityTypes)}</Text>
-        <List>
-          {activities.map(({ name, type, measures }) => {
-            return (
-              <View key={name}>
-                <ListItem
-                  itemHeader
-                  style={{ height: 20, backgroundColor: 'grey' }}
-                >
-                  <Text>{name.toUpperCase()}</Text>
-                </ListItem>
-                {measures.map((m, i) => {
-                  return (
-                    <ListItem key={i} style={{ height: 35 }}>
-                      <Body>
-                        <Text>{m.label}</Text>
-                      </Body>
-
-                      <Right>
-                        <CheckBox
-                          checked={
-                            !!this.state.activityTypes.find(
-                              i => i.type == m.type && i.measure == m.value
-                            )
-                          }
-                          onPress={() =>
-                            this.toggle({ type: name, measure: m.value })
-                          }
-                        />
-                      </Right>
-                    </ListItem>
-                  );
-                })}
-              </View>
-            );
-          })}
-        </List>
+        <CheckList activities={activities} onPress={val => this.toggle(val)} />
+        <FooterButton
+          disabled={activityTypes.length < 1}
+          onPress={() =>
+            navigate('AddDescription', {
+              challenge: { ...challenge, activityTypes }
+            })
+          }
+          text="Add Description & Finish"
+        />
       </Container>
     );
   }

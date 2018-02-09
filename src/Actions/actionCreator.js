@@ -66,6 +66,10 @@ export const initLogout = () => (dispatch, getState, getFirebase) => {
 export const submitRegistration = (credentials, profile) => {
   return (dispatch, getState, getFirebase) => {
     const firebase = getFirebase();
+    firebase
+      .auth()
+      .signInAndRetrieveDataWithEmailAndPassword(credentials)
+      .then();
     return firebase
       .createUser(credentials, profile)
       .then(userData => {
@@ -76,22 +80,6 @@ export const submitRegistration = (credentials, profile) => {
       });
   };
 };
-
-// export const submitRegistration = (credentials, profile) => (
-//   dispatch,
-//   getState,
-//   getFirebase
-// ) => {
-//   const firebase = getFirebase();
-//   firebase
-//     .createUser(credentials, profile)
-//     .then(userData => {
-//       dispatch(registerSuccess(userData));
-//     })
-//     .catch(error => {
-//       dispatch(registerFailure(error));
-//     });
-// };
 
 export const submitLogin = ({ credentials }) => (
   dispatch,

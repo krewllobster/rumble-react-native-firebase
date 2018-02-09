@@ -53,6 +53,8 @@ class ChallengeList extends Component {
               <Button
                 onPress={() =>
                   navigate('ChallengeDetail', {
+                    id: challenge.id,
+                    name: challenge.name,
                     challenge: challenge
                   })
                 }
@@ -68,14 +70,30 @@ class ChallengeList extends Component {
     return (
       <Container>
         <View flex={1}>
-          <Content padder>
+          <Content>
             {!challenges ? (
               <Spinner />
             ) : (
               <List>
                 {challenges &&
                   challenges.map(item => {
-                    return <ChallengeCard key={item.id} challenge={item} />;
+                    return (
+                      <ListItem
+                        key={item.id}
+                        onPress={() =>
+                          navigate('ChallengeDetail', {
+                            id: item.id
+                          })
+                        }
+                      >
+                        <Body>
+                          <Text>{item.name}</Text>
+                        </Body>
+                        <Right>
+                          <Icon name="ios-information-circle-outline" />
+                        </Right>
+                      </ListItem>
+                    );
                   })}
               </List>
             )}

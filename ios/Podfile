@@ -26,4 +26,6 @@ target 'rumblesum' do
   pod 'Crashlytics', '~> 3.9.3'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
 end

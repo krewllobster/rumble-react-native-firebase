@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import { withFirestore } from 'react-redux-firebase';
 
 import {
   Container,
+  Content,
   Text,
   Button,
   Card,
@@ -13,75 +15,46 @@ import {
   Form,
   Item,
   Label,
-  Input
+  Input,
+  Spinner
 } from 'native-base';
 
 class ChallengeDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      newDescription: ''
-    };
+    this.state = {};
   }
 
-  static navigationOptions = ({ navigation }) => {
-    const { state, setParams } = navigation;
-    const editing = state.params.mode === 'edit';
-    const { challenge } = state.params;
-    return {
-      title: challenge.name,
-      headerBackTitle: 'back',
-      headerRight: (
-        <Button
-          style={{ marginRight: 5 }}
-          small
-          onPress={() => setParams({ mode: editing ? 'save' : 'edit' })}
-        >
-          <Text>{editing ? 'save' : 'edit'}</Text>
-        </Button>
-      )
-    };
-  };
+  componentWillMount() {
+    this.props.firestore
+      .get({
+        collection: 'challenges',
+        doc: this.props.navigation.state.params.id
+      })
+      .then(response => {
+        this.setState({ challenge: response._data, loading: false });
+      })
+      .catch(error => {
+        this.setState({ challenge: { error } });
+      });
+  }
 
   render() {
-    const {
-      challenge: { description, id },
-      mode
-    } = this.props.navigation.state.params;
-    const { newDescription } = this.state;
+    const { challenge } = this.props;
     return (
       <Container>
-        <Card padder>
-          {mode && mode === 'edit' ? (
-            <Form>
-              <Item regular>
-                <Input
-                  placeholder={description}
-                  value={newDescription}
-                  onChangeText={t => this.setState({ newDescription: t })}
-                />
-              </Item>
-            </Form>
+        <Content>
+          {!!challenge ? (
+            <Spinner />
           ) : (
-            <CardItem>
-              <Body>
-                <Text>{description}</Text>
-              </Body>
-            </CardItem>
+            <Card>
+              <Text>{JSON.stringify(this.state.challenge)}</Text>
+            </Card>
           )}
-        </Card>
+        </Content>
       </Container>
     );
   }
 }
 
-export default compose(
-  firestoreConnect(props => [
-    `challenges/${props.navigation.state.params.challenge.id}`
-  ]),
-  connect(({ firestore: { ordered } }, props) => ({
-    challenges:
-      ordered.challenges &&
-      ordered.challenges[props.navigation.state.params.challenge.id]
-  }))
-)(ChallengeDetail);
+export default withFirestore(ChallengeDetail);

@@ -16,6 +16,7 @@ import ChallengeDetail from '../testComponents/ChallengeDetail';
 import ChallengeNewButton from '../testComponents/ChallengeNewButton';
 import ChallengeNew from '../testComponents/ChallengeNew';
 import AddActivities from '../testComponents/AddActivities';
+import AddDescription from '../testComponents/AddDescription';
 
 const mainTabs = TabNavigator(
   {
@@ -62,11 +63,33 @@ const mainTabs = TabNavigator(
   }
 );
 
+const challengeTabs = TabNavigator(
+  {
+    details: {
+      screen: ChallengeDetail,
+      navigationOptions: ({ navigation }) => ({
+        title: JSON.stringify(Object.keys(navigation.state.params)),
+        headerLeft: (
+          <Button transparent onPress={() => navigation.navigate('Challenges')}>
+            <Icon name="ios-close" />
+          </Button>
+        )
+      })
+    },
+    details2: { screen: ChallengeDetail }
+  },
+  {
+    tabBarPosition: 'top',
+    swipeEnabled: true,
+    activeTintColor: '#0044af'
+  }
+);
+
 const mainStack = StackNavigator(
   {
     main: { screen: mainTabs },
     ChallengeDetail: {
-      screen: ChallengeDetail
+      screen: challengeTabs
     },
     ChallengeNew: {
       screen: ChallengeNew,
@@ -79,6 +102,13 @@ const mainStack = StackNavigator(
       screen: AddActivities,
       navigationOptions: {
         title: 'Add Activities',
+        headerBackTitle: 'Back'
+      }
+    },
+    AddDescription: {
+      screen: AddDescription,
+      navigationOptions: {
+        title: 'Add Description',
         headerBackTitle: 'Back'
       }
     }

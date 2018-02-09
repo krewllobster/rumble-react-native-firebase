@@ -21,18 +21,20 @@ import {
   CardItem,
   Left,
   Thumbnail,
+  Row,
   Body,
   Picker,
   CheckBox
 } from 'native-base';
 import { Platform } from 'react-native';
 import { challengeModel } from '../Forms/ChallengeForm';
+import FooterButton from '../Lib/FooterButton';
 
 class ChallengeNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      goalMeasureType: 'count',
+      goalMeasureType: null,
       participantType: 'team',
       winConditionType: 'firstToGoal',
       winConditionMeasure: 'sum',
@@ -61,8 +63,9 @@ class ChallengeNew extends Component {
                 style={{
                   width: Platform.OS === 'ios' ? 150 : 150
                 }}
+                placeholder="select one"
                 iosHeader={label}
-                // mode="dropdown"
+                mode="dropdown"
                 selectedValue={this.state[s]}
                 onValueChange={(v, i) => this.setState({ [s]: v })}
               >
@@ -93,20 +96,11 @@ class ChallengeNew extends Component {
             })}
           </Form>
         </Content>
-        <Footer>
-          <FooterTab>
-            <Button
-              disabled={this.isDisabled()}
-              full
-              onPress={() =>
-                navigate('AddActivities', { challenge: this.state })
-              }
-              style={{ backgroundColor: this.isDisabled() ? '#777' : '#37F' }}
-            >
-              <Text style={{ color: '#FFF' }}>Add Activities</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
+        <FooterButton
+          disabled={this.isDisabled()}
+          onPress={() => navigate('AddActivities', { challenge: this.state })}
+          text="Add Activities"
+        />
       </Container>
     );
   }
