@@ -15,7 +15,8 @@ import {
   Card,
   CardItem,
   Image,
-  Toast
+  Toast,
+  Spinner
 } from 'native-base';
 
 import { Keyboard } from 'react-native';
@@ -28,15 +29,15 @@ class Register extends Component {
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
-      passwordConfirm: ''
+      companyCode: '',
+      password: ''
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.authError && nextProps.authError.message) {
+    if (nextProps.auth.error && nextProps.auth.error.message) {
       Toast.show({
-        text: nextProps.authError.message,
+        text: nextProps.auth.error.message,
         position: 'top',
         buttonText: 'Hide',
         type: 'danger',
@@ -51,22 +52,26 @@ class Register extends Component {
 
   register() {
     Keyboard.dismiss();
-    const { email, password, firstName, lastName } = this.state;
-    const credentials = { email, password, signIn: false };
-    const profile = { email, username: `${firstName} ${lastName}` };
-    this.props.submitRegistration(credentials, profile);
+    const { companyCode, email, password, firstName, lastName } = this.state;
+    const username = `${firstName} ${lastName}`;
+    this.props.submitRegistration({ email, password, username, companyCode });
   }
 
   render() {
+    const { isLoading } = this.props.auth;
     const { navigate } = this.props.navigation;
-    const { email, password, firstName, lastName } = this.state;
+    const { email, password, companyCode, firstName, lastName } = this.state;
+    if (isLoading) {
+      return (
+        <Container>
+          <Content padder>
+            <Spinner />
+          </Content>
+        </Container>
+      );
+    }
     return (
       <Container>
-        {/* <Header>
-          <Body>
-            <Title>Rumblesum</Title>
-          </Body>
-        </Header> */}
         <Container>
           <Content padder>
             <Form>
@@ -92,11 +97,23 @@ class Register extends Component {
               <Item floatingLabel>
                 <Label>Email</Label>
                 <Input
+                  clearButtonMode="while-editing"
                   autoCapitalize="none"
                   autoCorrect={false}
                   keyboardType="email-address"
                   value={email}
                   onChangeText={t => this.setState({ email: t })}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Company Code</Label>
+                <Input
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={companyCode}
+                  onChangeText={t =>
+                    this.setState({ companyCode: t.toUpperCase() })
+                  }
                 />
               </Item>
               <Item floatingLabel last>

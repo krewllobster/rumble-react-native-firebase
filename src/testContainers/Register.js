@@ -6,8 +6,7 @@ import { submitRegistration } from '../Actions/actionCreator';
 import Register from '../testComponents/Register';
 
 const mapStateToProps = state => ({
-  firebase: state.firebase,
-  authError: state.firebase.authError
+  auth: state.auth
 });
 
 const mapDispatchToProps = {

@@ -84,7 +84,8 @@ class ChallengeList extends Component {
                         key={item.id}
                         onPress={() =>
                           navigate('ChallengeDetail', {
-                            id: item.id
+                            id: item.id,
+                            name: item.name
                           })
                         }
                       >

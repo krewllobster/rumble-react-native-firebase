@@ -4,11 +4,12 @@ import {
   persistStore,
   persistReducer
 } from 'redux-persist';
-import storage from 'redux-persist/es/storage';
 
-import counterReducer from './src/Reducers/counterReducer';
+import storage from 'redux-persist/lib/storage';
+
+import authReducer from './src/Reducers/authReducer';
 import NavigationReducer from './src/Reducers/navigationReducer';
-import auth from './src/Reducers/auth';
+import activeCompanyReducer from './src/Reducers/activeCompanyReducer';
 
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
@@ -20,27 +21,28 @@ import {
   firebaseStateReducer,
   getFirebase
 } from 'react-redux-firebase';
-import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 
-// const config = {
-//   key: 'root',
-//   storage,
-//   blacklist: ['counterString']
-// };
+import {
+  getFirestore,
+  reduxFirestore,
+  firestoreReducer
+} from 'redux-firestore';
 
-// const config1 = {
-//   key: 'primary',
-//   storage
-// };
+import { reactNavigationMiddleware } from './src/Navigation';
 
-// // Object of all the reducers for redux-persist
-// const reducer = {
-//   counterReducer,
-//   auth
-// };
+const persistConfig = {
+  key: 'root',
+  storage
+};
 
-// combineReducer applied on persisted(counterReducer) and NavigationReducer
+const persistedActiveCompanyReducer = persistReducer(
+  persistConfig,
+  activeCompanyReducer
+);
+
 const rootReducer = combineReducers({
+  auth: authReducer,
+  activeCompany: persistedActiveCompanyReducer,
   nav: NavigationReducer,
   firebase: firebaseStateReducer,
   firestore: firestoreReducer
@@ -54,26 +56,32 @@ const reduxFirebaseConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true,
   enableRedirectHandling: false,
-  resetBeforeLogin: false
+  resetBeforeLogin: false,
+  profileFactory: (userData, profileData) => {
+    // how profiles are stored in database
+    console.log('setting profile');
+    console.log('userData', userData);
+    console.log('profileData', profileData);
+    return {
+      email: profileData.email,
+      username: profileData.username,
+      companies: { [profileData.companyId]: true }
+    };
+  }
 };
 
 function configureStore(initialState = { firebase: {}, firestore: {} }) {
   const firebase = RNFirebase.initializeApp(reactNativeFirebaseConfig);
   firebase.firestore();
-  //Reducer Config
-  // ===============
 
-  // config to not persist the *counterString* of the CounterReducer's slice of the global state.
-
-  //Middleware Configuration
-  //=======================================
   const loggerMiddleware = createLogger({
     predicate: (getState, action) => __DEV__
   });
 
   const middleware = [
-    thunkMiddleware.withExtraArgument(getFirebase),
-    loggerMiddleware
+    thunkMiddleware.withExtraArgument({ getFirebase, getFirestore }),
+    loggerMiddleware,
+    reactNavigationMiddleware
   ];
 
   // =======================================
@@ -88,11 +96,12 @@ function configureStore(initialState = { firebase: {}, firestore: {} }) {
     initialState,
     compose(
       reactReduxFirebase(firebase, reduxFirebaseConfig),
-      reduxFirestore(firebase),
       applyMiddleware(...middleware),
+      reduxFirestore(firebase),
       ...enhancers
     )
   );
+
   let persistor = persistStore(store);
   return { persistor, store };
 }

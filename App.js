@@ -10,21 +10,21 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 // import store from './store'
 
+const { store, persistor } = configureStore();
+
 import { Root } from 'native-base';
 import AppNavigation from './src/Navigation';
 import configureStore from './store';
-
-const { store, persistor } = configureStore();
 
 export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        {/* <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}> */}
-        <Root>
-          <AppNavigation />
-        </Root>
-        {/* </PersistGate> */}
+        <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+          <Root>
+            <AppNavigation />
+          </Root>
+        </PersistGate>
       </Provider>
     );
   }

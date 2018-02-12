@@ -46,7 +46,7 @@ class Login extends Component {
     const LoginForm = (
       <Content padder>
         <Form>
-          <Item fixedLabel>
+          <Item floatingLabel>
             <Label>Email</Label>
             <Input
               autoCapitalize="none"
@@ -55,7 +55,7 @@ class Login extends Component {
               onChangeText={text => this.setState({ email: text })}
             />
           </Item>
-          <Item fixedLabel last>
+          <Item floatingLabel last>
             <Label>Password</Label>
             <Input
               autoCapitalize="none"

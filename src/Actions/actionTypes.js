@@ -7,6 +7,9 @@ const RegisterSuccess = 'REGISTER_SUCCESS';
 const RegisterFailure = 'REGISTER_FAILURE';
 const LoginSuccess = 'LOGIN_SUCCESS';
 const LoginFailure = 'LOGIN_FAILURE';
+const SetActiveCompany = 'SET_ACTIVE_COMPANY';
+const SetActiveCompanySuccess = 'SET_ACTIVE_COMPANY_SUCCESS';
+const SetActiveCompanyFailure = 'SET_ACTIVE_COMPANY_FAILURE';
 
 export {
   incrementCounter,
@@ -17,5 +20,8 @@ export {
   RegisterSuccess,
   RegisterFailure,
   LoginSuccess,
-  LoginFailure
+  LoginFailure,
+  SetActiveCompany,
+  SetActiveCompanyFailure,
+  SetActiveCompanySuccess
 };

@@ -26,11 +26,6 @@ class ChallengeDetail extends Component {
     this.state = {};
   }
 
-  componentWillMount() {
-    const { navigation: { setParams }, challenge: { name } } = this.props;
-    setParams({ name });
-  }
-
   static navigationOptions = ({ navigation }) => {
     const { name } = navigation.state.params;
     return {
@@ -52,6 +47,7 @@ class ChallengeDetail extends Component {
             <Spinner />
           ) : (
             <Card>
+              <Text>{JSON.stringify(this.props.navigation.state.params)}</Text>
               <Text>{JSON.stringify(this.props.challenge)}</Text>
             </Card>
           )}

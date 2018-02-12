@@ -18,48 +18,6 @@ import ChallengeNew from '../testComponents/ChallengeNew';
 import AddActivities from '../testComponents/AddActivities';
 import AddDescription from '../testComponents/AddDescription';
 
-// root {
-//   stack {
-//     signedIn: {
-//       stack: {
-//         tabs: {
-//           mainTabs: {
-//             Feed,
-//             Challenges,
-//             People
-//           }
-//         },
-//         activityDetail,
-//         challengeDetail: {
-//           tabs: {
-//             Details,
-//             LeaderBoard,
-//             Participants
-//           }
-//         },
-//         createChallenge: {
-//           stack: {
-//             challengeNew,
-//             addActivities,
-//             addDescription
-//           }
-//         },
-//         createActivity: {
-//           stack: {
-
-//           }
-//         }
-//       }
-//     },
-//     signedOut: {
-//       stack: {
-//         login,
-//         register
-//       }
-//     }
-//   }
-// }
-
 const mainTabs = TabNavigator(
   {
     Feed: {
@@ -75,14 +33,6 @@ const mainTabs = TabNavigator(
     },
     Challenges: {
       screen: ChallengeList
-      // navigationOptions: ({ navigation }) => ({
-      //   title: 'Challenges',
-      //   headerLeft: (
-      //     <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
-      //       <Icon name="menu" />
-      //     </Button>
-      //   )
-      // })
     },
     People: {
       screen: PeopleList,
@@ -108,12 +58,25 @@ const mainTabs = TabNavigator(
 const challengeTabs = TabNavigator(
   {
     details: {
-      screen: ChallengeDetail
+      screen: ChallengeDetail,
+      navigationOptions: {
+        title: 'Details'
+      }
     },
-    details2: { screen: ChallengeDetail }
+    leaderboard: {
+      screen: ChallengeDetail,
+      navigationOptions: {
+        title: 'Leaderboard'
+      }
+    },
+    people: {
+      screen: ChallengeDetail,
+      navigationOptions: {
+        title: 'Participants'
+      }
+    }
   },
   {
-    tabBarPosition: 'top',
     swipeEnabled: true,
     activeTintColor: '#0044af'
   }
@@ -123,7 +86,10 @@ const mainStack = StackNavigator(
   {
     main: { screen: mainTabs },
     ChallengeDetail: {
-      screen: challengeTabs
+      screen: challengeTabs,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.name
+      })
     },
     ChallengeNew: {
       screen: ChallengeNew,

@@ -13,7 +13,6 @@ import ChallengeList from '../testComponents/ChallengeList';
 // )(ChallengeList);
 
 export default compose(
-  firestoreConnect(['challenges']),
   connect((state, props) => ({
     challenges: state.firestore.ordered.challenges
   }))

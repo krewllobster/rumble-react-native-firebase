@@ -50,6 +50,7 @@ class AddDescription extends Component {
             <Item floatingLabel>
               <Label>Name</Label>
               <Input
+                autoCorrect={false}
                 clearButtonMode="while-editing"
                 autoCapitalize="words"
                 value={name}
@@ -64,6 +65,7 @@ class AddDescription extends Component {
                   : null}
               </Label>
               <Input
+                autoCorrect={false}
                 returnKeyType="done"
                 enablesReturnKeyAutomatically
                 clearButtonMode="while-editing"
