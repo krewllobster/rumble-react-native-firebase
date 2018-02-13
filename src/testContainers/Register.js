@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { submitRegistration } from '../Actions/actionCreator';
+import { submitRegistration } from '../Actions/submitRegistrationThunk';
 import Register from '../testComponents/Register';
 
 const mapStateToProps = state => ({

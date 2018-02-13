@@ -126,14 +126,15 @@ class Register extends Component {
                   onChangeText={t => this.setState({ password: t })}
                 />
               </Item>
-              <Button
-                disabled={!email || !password || !firstName || !lastName}
-                block
-                onPress={() => this.register()}
-              >
-                <Text>Register</Text>
-              </Button>
             </Form>
+            <Button
+              style={{ marginTop: 10 }}
+              disabled={!email || !password || !firstName || !lastName}
+              block
+              onPress={() => this.register()}
+            >
+              <Text>Register</Text>
+            </Button>
           </Content>
         </Container>
       </Container>

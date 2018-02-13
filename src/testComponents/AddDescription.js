@@ -27,18 +27,26 @@ class AddDescription extends Component {
   };
 
   handleSubmit = () => {
-    const { firestore } = this.props;
-    this.setState({ response: JSON.stringify(Object.keys(firestore)) });
     const { name, description } = this.state;
-    const { navigate } = this.props.navigation;
     const { challenge } = this.props.navigation.state.params;
-    firestore
-      .add('challenges', { ...challenge, name, description })
-      .then(response => {
-        const id = response._documentPath._parts[1];
-        navigate('ChallengeDetail', { id });
-      });
+    const { submitChallenge } = this.props;
+
+    submitChallenge({ ...challenge, name, description });
   };
+
+  // handleSubmit = () => {
+  //   const { firestore } = this.props;
+  //   this.setState({ response: JSON.stringify(Object.keys(firestore)) });
+  //   const { name, description } = this.state;
+  //   const { navigate } = this.props.navigation;
+  //   const { challenge } = this.props.navigation.state.params;
+  //   firestore
+  //     .add('challenges', { ...challenge, name, description })
+  //     .then(response => {
+  //       const id = response._documentPath._parts[1];
+  //       navigate('ChallengeDetail', { id });
+  //     });
+  // };
 
   render() {
     const { name, description } = this.state;
@@ -86,11 +94,4 @@ class AddDescription extends Component {
   }
 }
 
-// const AddTodo = () =>
-//   <div>
-//     <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
-//       Add Sample Todo
-//     </button>
-//   </div>
-
-export default withFirestore(AddDescription);
+export default AddDescription;

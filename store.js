@@ -65,7 +65,7 @@ const reduxFirebaseConfig = {
     return {
       email: profileData.email,
       username: profileData.username,
-      companies: { [profileData.companyId]: true }
+      companies: { [profileData.companyId]: { default: true } }
     };
   }
 };

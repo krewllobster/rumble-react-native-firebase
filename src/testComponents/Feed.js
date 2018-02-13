@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Text, Button } from 'native-base';
+import { purgeStoredState } from 'redux-persist';
 
 class Feed extends Component {
   render() {

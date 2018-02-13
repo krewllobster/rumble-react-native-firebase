@@ -18,6 +18,14 @@ const authReducer = createReducer(initialState, {
   [LoginSuccess](state, action) {
     return { isLoggedIn: true, uid: action.uid, error: null };
   },
+  ['@@reactReduxFirebase/LOGIN'](state, action) {
+    return {
+      ...state,
+      isLoggedIn: true,
+      uid: action.auth._user.uid,
+      error: null
+    };
+  },
   [LoginFailure](state, action) {
     return { isLoggedIn: false, uid: null, error: action.error };
   },

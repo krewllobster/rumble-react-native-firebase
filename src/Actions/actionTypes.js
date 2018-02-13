@@ -10,6 +10,10 @@ const LoginFailure = 'LOGIN_FAILURE';
 const SetActiveCompany = 'SET_ACTIVE_COMPANY';
 const SetActiveCompanySuccess = 'SET_ACTIVE_COMPANY_SUCCESS';
 const SetActiveCompanyFailure = 'SET_ACTIVE_COMPANY_FAILURE';
+const SetDefaultCompany = 'SET_DEFAULT_COMPANY';
+const SubmitChallenge = 'SUBMIT_CHALLENGE';
+const SubmitChallengeSuccess = 'SUBMIT_CHALLENGE_SUCCESS';
+const SubmitChallengeFailure = 'SUBMIT_CHALLENGE_FAILURE';
 
 export {
   incrementCounter,
@@ -23,5 +27,9 @@ export {
   LoginFailure,
   SetActiveCompany,
   SetActiveCompanyFailure,
-  SetActiveCompanySuccess
+  SetActiveCompanySuccess,
+  SetDefaultCompany,
+  SubmitChallenge,
+  SubmitChallengeSuccess,
+  SubmitChallengeFailure
 };

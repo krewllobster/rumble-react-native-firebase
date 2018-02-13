@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 import { submitLogin } from '../Actions/actionCreator';
 import Login from '../testComponents/Login';
 
-const mapStateToProps = state => ({
-  auth: state.firebase.auth
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
   submitLogin

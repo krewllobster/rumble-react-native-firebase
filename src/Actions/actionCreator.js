@@ -1,6 +1,4 @@
 import {
-  incrementCounter,
-  decrementCounter,
   Login,
   Logout,
   Register,
@@ -11,16 +9,6 @@ import {
   NavigateToLogoutScreen
 } from './actionTypes';
 
-import activeCompanyActions from './companyActionCreator';
-
-const incrementAction = () => ({
-  type: incrementCounter
-});
-
-const decrementAction = () => ({
-  type: decrementCounter
-});
-
 const login = () => ({
   type: Login
 });
@@ -29,7 +17,7 @@ const logout = () => ({
   type: Logout
 });
 
-const register = () => ({
+export const register = () => ({
   type: Register
 });
 
@@ -43,13 +31,13 @@ const loginFailure = ({ error }) => ({
   error
 });
 
-const registerSuccess = ({ uid, error }) => ({
+export const registerSuccess = ({ uid, error }) => ({
   type: RegisterSuccess,
   uid,
   error
 });
 
-const registerFailure = ({ uid, error }) => ({
+export const registerFailure = ({ uid, error }) => ({
   type: RegisterFailure,
   error
 });
@@ -66,51 +54,6 @@ export const initLogout = () => (dispatch, getState, { getFirebase }) => {
     .catch(e => console.log(e));
 };
 
-export const submitRegistration = ({
-  email,
-  password,
-  username,
-  companyCode
-}) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(register());
-    const firebase = getFirebase();
-    const firestore = getFirestore();
-    console.log(email, password, username);
-    const companies = await firestore.get({
-      collection: 'companies',
-      where: ['companyCode', '==', companyCode]
-    });
-
-    const company = !!companies._docs[0] && companies._docs[0]._data;
-    const companyId =
-      !!companies._docs[0] && companies._docs[0]._ref._documentPath._parts[1];
-
-    console.log(companies);
-    console.log(company);
-    console.log(companyId);
-
-    if (!company && !companyId) {
-      return dispatch(
-        registerFailure(new Error('No company exists with that code'))
-      );
-    }
-
-    firebase
-      .createUser({ email, password }, { email, username, companyId })
-      .then(userData => {
-        const { uid } = getState().firebase.auth;
-        //set active company
-        dispatch(activeCompanyActions.setCompanySuccess(companyId));
-        //set auth
-        return dispatch(registerSuccess({ uid }));
-      })
-      .catch(error => {
-        return dispatch(registerFailure({ error }));
-      });
-  };
-};
-
 export const submitLogin = ({ credentials }) => (
   dispatch,
   getState,
@@ -120,19 +63,13 @@ export const submitLogin = ({ credentials }) => (
   firebase
     .login(credentials)
     .then(userData => {
+      console.log('logging in userdata');
+      console.log(userData);
       const { uid } = getState().firebase.auth;
+      //TODO: If no companyId, goto default company
       dispatch(loginSuccess({ uid }));
     })
     .catch(error => {
       dispatch(loginFailure({ error }));
     });
-};
-
-export {
-  incrementAction,
-  decrementAction,
-  login,
-  logout,
-  register,
-  registerSuccess
 };

@@ -78,26 +78,33 @@ class ChallengeList extends Component {
             ) : (
               <List>
                 {challenges &&
-                  challenges.map(item => {
-                    return (
-                      <ListItem
-                        key={item.id}
-                        onPress={() =>
-                          navigate('ChallengeDetail', {
-                            id: item.id,
-                            name: item.name
-                          })
-                        }
-                      >
-                        <Body>
-                          <Text>{item.name}</Text>
-                        </Body>
-                        <Right>
-                          <Icon name="ios-information-circle-outline" />
-                        </Right>
-                      </ListItem>
-                    );
-                  })}
+                  challenges
+                    .filter(c => c.companyId == this.props.activeCompany)
+                    .map(item => {
+                      return (
+                        <ListItem
+                          key={item.id}
+                          onPress={() =>
+                            navigate('ChallengeDetail', {
+                              id: item.id,
+                              name: item.name
+                            })
+                          }
+                        >
+                          <Body>
+                            <Text>{item.name}</Text>
+                          </Body>
+                          <Right>
+                            {item.createdBy == this.props.uid && (
+                              <Button primary>
+                                <Text>Edit</Text>
+                              </Button>
+                            )}
+                            <Icon name="ios-information-circle-outline" />
+                          </Right>
+                        </ListItem>
+                      );
+                    })}
               </List>
             )}
           </Content>
@@ -116,10 +123,13 @@ class ChallengeList extends Component {
     );
   }
 }
+
 export default compose(
   firestoreConnect(['challenges']),
   connect((state, props) => ({
-    challenges: state.firestore.ordered.challenges
+    challenges: state.firestore.ordered.challenges,
+    activeCompany: state.activeCompany.activeCompany,
+    uid: state.auth.uid
   }))
 )(ChallengeList);
 // export default ChallengeList;

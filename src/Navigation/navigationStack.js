@@ -17,6 +17,8 @@ import ChallengeNewButton from '../testComponents/ChallengeNewButton';
 import ChallengeNew from '../testComponents/ChallengeNew';
 import AddActivities from '../testComponents/AddActivities';
 import AddDescription from '../testComponents/AddDescription';
+import SubmitChallenge from '../testContainers/SubmitChallenge';
+import CompanyList from '../testComponents/CompanyList';
 
 const mainTabs = TabNavigator(
   {
@@ -92,11 +94,7 @@ const mainStack = StackNavigator(
       })
     },
     ChallengeNew: {
-      screen: ChallengeNew,
-      navigationOptions: {
-        title: 'New Challenge',
-        headerBackTitle: 'Cancel'
-      }
+      screen: ChallengeNew
     },
     AddActivities: {
       screen: AddActivities,
@@ -106,7 +104,7 @@ const mainStack = StackNavigator(
       }
     },
     AddDescription: {
-      screen: AddDescription,
+      screen: SubmitChallenge,
       navigationOptions: {
         title: 'Add Description',
         headerBackTitle: 'Back'
@@ -122,7 +120,10 @@ const mainStack = StackNavigator(
 );
 
 const SignedIn = DrawerNavigator({
-  Main: { screen: mainStack, navigationOptions: { title: 'Main Stuff' } }
+  Main: { screen: mainStack, navigationOptions: { title: 'Main Stuff' } },
+  ManageCompany: {
+    screen: CompanyList
+  }
 });
 
 const SignedOut = StackNavigator(
