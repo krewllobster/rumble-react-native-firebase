@@ -44,7 +44,8 @@ class ChallengeNew extends Component {
   }
 
   static navigationOptions = ({ navigation }) => ({
-    headerBackTitle: 'cancel'
+    headerBackTitle: 'cancel',
+    title: 'New Challenge'
   });
 
   isDisabled() {

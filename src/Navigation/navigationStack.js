@@ -119,10 +119,19 @@ const mainStack = StackNavigator(
   }
 );
 
+const CompanyManagement = StackNavigator({
+  ManageCompany: {
+    screen: CompanyList
+  }
+});
+
 const SignedIn = DrawerNavigator({
   Main: { screen: mainStack, navigationOptions: { title: 'Main Stuff' } },
   ManageCompany: {
-    screen: CompanyList
+    screen: CompanyManagement,
+    navigationOptions: {
+      title: 'Manage Companies'
+    }
   }
 });
 

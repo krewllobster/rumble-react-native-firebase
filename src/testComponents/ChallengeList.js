@@ -8,6 +8,7 @@ import {
   Text,
   List,
   ListItem,
+  Item,
   Button,
   Fab,
   Icon,
@@ -26,6 +27,9 @@ import {
 class ChallengeList extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      fabActive: false
+    };
   }
 
   static navigationOptions = ({ navigation, screenProps }) => ({
@@ -34,7 +38,8 @@ class ChallengeList extends Component {
         <Icon name="menu" />
       </Button>
     ),
-    title: 'Challenges'
+    title: 'Challenges',
+    headerBackTitle: 'back'
   });
 
   render() {
@@ -110,13 +115,25 @@ class ChallengeList extends Component {
           </Content>
 
           <Fab
-            active={true}
+            active={this.state.fabActive}
+            direction={'up'}
             containerStyle={{}}
             style={{ backgroundColor: '#AA2222' }}
             position="bottomRight"
-            onPress={() => navigate('ChallengeNew')}
+            onPress={() => this.setState({ fabActive: !this.state.fabActive })}
+            // navigate('ChallengeNew')}
           >
             <Icon name="ios-add" />
+            <Button
+              onPress={() => navigate('ChallengeNew')}
+              style={{ backgroundColor: '#34A34F' }}
+            >
+              <Icon name="create" />
+            </Button>
+
+            <Button style={{ backgroundColor: '#3B5998' }}>
+              <Icon name="flash" />
+            </Button>
           </Fab>
         </View>
       </Container>

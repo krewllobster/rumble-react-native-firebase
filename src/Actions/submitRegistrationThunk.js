@@ -26,15 +26,13 @@ export const submitRegistration = ({
         registerFailure(new Error('No company exists with that code'))
       );
     }
-
     firebase
       .createUser({ email, password }, { email, username, companyId })
       .then(userData => {
         const { uid } = getState().firebase.auth;
         //set active company
-        dispatch(activeCompanyActions.setCompanySuccess(companyId));
-        //set default company
-        // dispatch(activeCompanyActions.setDefaultCompany(companyId));
+        dispatch(activeCompanyActions.setActiveCompany(companyId));
+
         //set auth
         return dispatch(registerSuccess({ uid }));
       })

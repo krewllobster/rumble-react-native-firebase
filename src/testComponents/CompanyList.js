@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import { submitCompany } from '../Actions/actionCreator';
+import { setActiveCompany } from '../Actions/companyActionCreator';
 
 import {
   Left,
@@ -11,45 +13,156 @@ import {
   Content,
   List,
   ListItem,
-  Text
+  Text,
+  Spinner,
+  CheckBox,
+  Button,
+  Icon,
+  Footer,
+  FooterTab,
+  Card,
+  CardItem,
+  Header,
+  Form,
+  Input,
+  Label,
+  Item
 } from 'native-base';
+
+import { Keyboard, View } from 'react-native';
+import Modal from 'react-native-modal';
 
 class CompanyList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      modalVisible: false,
+      companyCodeInput: '',
+      companyCodeError: false
+    };
   }
 
-  CompanyItem = ({ id, active, isDefault, name }) => {
-    return <ListItem key={id} />;
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Manage Companies',
+    headerLeft: (
+      <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+        <Icon name="menu" />
+      </Button>
+    )
+  });
+
+  openModal() {
+    this.setState({
+      modalVisible: true,
+      companyCodeInput: '',
+      companyCodeError: false
+    });
+  }
+
+  closeModal() {
+    Keyboard.dismiss();
+    this.setState({
+      modalVisible: false,
+      companyCodeInput: '',
+      companyCodeError: false
+    });
+  }
+
+  switchCompany(active, id) {
+    if (!active) {
+      this.props.setActiveCompany(id);
+    }
+  }
+
+  addCompany() {
+    const { submitCompany } = this.props;
+    const { companyCodeInput } = this.state;
+    submitCompany(companyCodeInput)
+      .then(response => {
+        this.closeModal();
+      })
+      .catch(error => {
+        this.setState({ companyCodeError: true });
+        this.closeModal();
+      })
+      .then(Keyboard.dismiss());
+  }
+
+  renderCompanyItem = ({ id, active, isDefault, displayName }) => (
+    <ListItem key={id}>
+      <Body>
+        <Text>{displayName}</Text>
+      </Body>
+      <Right>
+        <CheckBox
+          checked={active}
+          onPress={() => this.switchCompany(active, id)}
+        />
+      </Right>
+    </ListItem>
+  );
 
   render() {
     const { userCompanies, allCompanies, activeCompany } = this.props;
+    const { modalVisible, companyCodeError, companyCodeInput } = this.state;
+
     return (
       <Container>
+        <Modal
+          onBackdropPress={() => this.closeModal()}
+          onBackButtonPress={() => this.closeModal()}
+          avoidKeyboard
+          isVisible={modalVisible}
+        >
+          <View style={{ backgroundColor: 'white' }}>
+            <Form>
+              <Item last error={companyCodeError}>
+                <Input
+                  autoCorrect={false}
+                  value={companyCodeInput}
+                  placeholder={'Company Code'}
+                  onChangeText={t => this.setState({ companyCodeInput: t })}
+                />
+              </Item>
+            </Form>
+            <Button full onPress={() => this.addCompany()}>
+              <Text>Add Company</Text>
+            </Button>
+          </View>
+        </Modal>
         <Content padder>
-          <List>
-            <ListItem>
-              <Left>
-                <Text>Default</Text>
-              </Left>
-              <Body>
-                <Text>Company Name</Text>
-              </Body>
-              <Right>
-                <Text>Active</Text>
-              </Right>
-            </ListItem>
-            {Object.entries(userCompanies).map(([k, v]) => {
-              return (
-                <ListItem key={k}>
-                  <Text>{allCompanies[k].displayName}</Text>
-                </ListItem>
-              );
-            })}
-          </List>
+          {!allCompanies ? (
+            <Spinner />
+          ) : (
+            <List>
+              <ListItem itemHeader first>
+                <Body>
+                  <Text style={{ fontWeight: 'bold' }}>Company Name</Text>
+                </Body>
+                <Right>
+                  <Text>Current</Text>
+                </Right>
+              </ListItem>
+              {Object.entries(userCompanies).map(([k, v]) => {
+                const { displayName } = allCompanies[k];
+                const { default: isDefault } = v;
+                return this.renderCompanyItem({
+                  id: k,
+                  isDefault,
+                  displayName,
+                  active: k == activeCompany
+                });
+              })}
+            </List>
+          )}
         </Content>
+        <Footer>
+          <FooterTab>
+            <Button full primary onPress={() => this.openModal()}>
+              <Text style={{ color: 'white' }}>Add Another Company</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
       </Container>
     );
   }
@@ -61,7 +174,10 @@ const mapStateToProps = state => ({
   activeCompany: state.activeCompany.activeCompany
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  submitCompany,
+  setActiveCompany
+};
 
 export default compose(
   firestoreConnect(['companies']),

@@ -54,6 +54,34 @@ export const initLogout = () => (dispatch, getState, { getFirebase }) => {
     .catch(e => console.log(e));
 };
 
+export const submitCompany = companyCode => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const { companies } = getState().firebase.profile;
+  const firebase = getFirebase();
+  const firestore = getFirestore();
+  const newCompany = await firestore.get({
+    collection: 'companies',
+    where: ['companyCode', '==', companyCode]
+  });
+
+  const company = !!newCompany._docs[0] && newCompany._docs[0]._data;
+  const companyId =
+    !!newCompany._docs[0] && newCompany._docs[0]._ref._documentPath._parts[1];
+
+  if (!company && !companyId) {
+    return new Error('No company with that code exists');
+  }
+
+  if (!!company && !!companyId) {
+    return firebase.updateProfile({
+      companies: { ...companies, [companyId]: { default: false } }
+    });
+  }
+};
+
 export const submitLogin = ({ credentials }) => (
   dispatch,
   getState,

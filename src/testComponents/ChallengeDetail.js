@@ -17,13 +17,16 @@ import {
   Label,
   Input,
   Spinner,
-  Icon
+  Icon,
+  Fab
 } from 'native-base';
 
 class ChallengeDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      fabActive: false
+    };
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -52,6 +55,24 @@ class ChallengeDetail extends Component {
             </Card>
           )}
         </Content>
+        <Fab
+          active={this.state.fabActive}
+          direction={'up'}
+          containerStyle={{}}
+          style={{ backgroundColor: '#AA2222' }}
+          position="bottomRight"
+          onPress={() => this.setState({ fabActive: !this.state.fabActive })}
+          // navigate('ChallengeNew')}
+        >
+          <Icon name="ios-add" />
+          {challenge.activityTypes.map((type, i) => {
+            return (
+              <Button key={i} style={{ backgroundColor: '#3B5998' }}>
+                <Text>{i + 1}</Text>
+              </Button>
+            );
+          })}
+        </Fab>
       </Container>
     );
   }
