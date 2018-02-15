@@ -19,6 +19,7 @@ import AddActivities from '../testComponents/AddActivities';
 import AddDescription from '../testComponents/AddDescription';
 import SubmitChallenge from '../testContainers/SubmitChallenge';
 import CompanyList from '../testComponents/CompanyList';
+import ChallengeAbout from '../testComponents/challenge/ChallengeAbout';
 
 const mainTabs = TabNavigator(
   {
@@ -50,7 +51,7 @@ const mainTabs = TabNavigator(
   },
   {
     order: ['Feed', 'Challenges', 'People'],
-    initialRouteName: 'Feed',
+    initialRouteName: 'Challenges',
     animationEnabled: true,
     swipeEnabled: true,
     activeTintColor: '#0044af'
@@ -60,15 +61,19 @@ const mainTabs = TabNavigator(
 const challengeTabs = TabNavigator(
   {
     details: {
-      screen: ChallengeDetail,
+      screen: ChallengeAbout,
       navigationOptions: {
-        title: 'Details'
+        title: 'About',
+        tabBarIcon: <Icon name="people" />
       }
     },
     leaderboard: {
       screen: ChallengeDetail,
       navigationOptions: {
-        title: 'Leaderboard'
+        title: 'Leaders',
+        headerTitleStyle: {
+          fontSize: 10
+        }
       }
     },
     people: {
@@ -80,7 +85,12 @@ const challengeTabs = TabNavigator(
   },
   {
     swipeEnabled: true,
-    activeTintColor: '#0044af'
+    animationEnabled: false,
+    activeTintColor: '#0044af',
+    tabBarOptions: {
+      showIcon: true,
+      showLabel: true
+    }
   }
 );
 

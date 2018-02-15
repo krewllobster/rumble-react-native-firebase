@@ -26,7 +26,8 @@ import {
   Form,
   Input,
   Label,
-  Item
+  Item,
+  Toast
 } from 'native-base';
 
 import { Keyboard, View } from 'react-native';
@@ -50,6 +51,18 @@ class CompanyList extends Component {
       </Button>
     )
   });
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.companyCodeError) {
+      Toast.show({
+        text: 'No company exists with that code',
+        position: 'top',
+        buttonText: 'Hide',
+        type: 'danger',
+        duration: 4000
+      });
+    }
+  }
 
   openModal() {
     this.setState({
@@ -79,6 +92,7 @@ class CompanyList extends Component {
     const { companyCodeInput } = this.state;
     submitCompany(companyCodeInput)
       .then(response => {
+        this.setState({ response });
         this.closeModal();
       })
       .catch(error => {
@@ -121,7 +135,10 @@ class CompanyList extends Component {
                   autoCorrect={false}
                   value={companyCodeInput}
                   placeholder={'Company Code'}
-                  onChangeText={t => this.setState({ companyCodeInput: t })}
+                  autoCapitalize={'characters'}
+                  onChangeText={t =>
+                    this.setState({ companyCodeInput: t.toUpperCase() })
+                  }
                 />
               </Item>
             </Form>

@@ -22,7 +22,8 @@ export const submitChallenge = challenge => {
       const challengeToSubmit = {
         ...challenge,
         createdBy: uid,
-        companyId: activeCompany
+        companyId: activeCompany,
+        participants: { [uid]: true }
       };
 
       firestore.add('challenges', challengeToSubmit).then(response => {

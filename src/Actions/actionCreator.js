@@ -72,7 +72,7 @@ export const submitCompany = companyCode => async (
     !!newCompany._docs[0] && newCompany._docs[0]._ref._documentPath._parts[1];
 
   if (!company && !companyId) {
-    return new Error('No company with that code exists');
+    return reject(new Error('No company with that code exists'));
   }
 
   if (!!company && !!companyId) {

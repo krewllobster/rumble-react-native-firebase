@@ -37,7 +37,10 @@ class ChallengeDetail extends Component {
         <Button transparent onPress={() => navigation.navigate('Challenges')}>
           <Icon name="ios-close" />
         </Button>
-      )
+      ),
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <Icon name="people" tintColor={tintColor} />;
+      }
     };
   };
 
