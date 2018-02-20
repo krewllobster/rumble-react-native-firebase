@@ -12,7 +12,6 @@ import {
   Footer,
   FooterTab,
   DeckSwiper,
-  View,
   Item,
   Label,
   Input,
@@ -24,9 +23,10 @@ import {
   Row,
   Body,
   Picker,
-  CheckBox
+  CheckBox,
+  Segment
 } from 'native-base';
-import { Platform } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 import { challengeModel } from '../Forms/ChallengeForm';
 import FooterButton from '../Lib/FooterButton';
 
@@ -52,50 +52,48 @@ class ChallengeNew extends Component {
     return Object.values(this.state).some(v => v == null);
   }
 
+  renderItems(key, { label, options }) {
+    return (
+      <View>
+        <CardItem>
+          <Body>
+            <Text style={{ alignSelf: 'center' }}>{label}</Text>
+            <Segment style={styles.segment}>
+              {options.map((o, i) => (
+                <Button
+                  style={styles.segmentButton}
+                  first={i == 0}
+                  last={i == options.length - 1}
+                  active={this.state[key] == o.value}
+                  key={o.label}
+                  onPress={() => this.setState({ [key]: o.value })}
+                >
+                  <Text style={styles.segmentText}>{o.label}</Text>
+                </Button>
+              ))}
+            </Segment>
+          </Body>
+        </CardItem>
+      </View>
+    );
+  }
+
   render() {
-    const CustomPicker = ({ s, val }) => {
-      const { label, options, type } = val;
-      return (
-        type == 'picker' && (
-          <Item>
-            <Label>{label}</Label>
-            <Right>
-              <Picker
-                style={{
-                  width: Platform.OS === 'ios' ? 150 : 150
-                }}
-                placeholder="select one"
-                iosHeader={label}
-                mode="dropdown"
-                selectedValue={this.state[s]}
-                onValueChange={(v, i) => this.setState({ [s]: v })}
-              >
-                {options.map(o => {
-                  return (
-                    <Picker.Item
-                      key={o.label}
-                      label={o.label}
-                      value={o.value}
-                    />
-                  );
-                })}
-              </Picker>
-            </Right>
-          </Item>
-        )
-      );
-    };
     const { navigate } = this.props.navigation;
     return (
       <Container>
-        <Content padder>
-          <Form>
-            {Object.keys(challengeModel).map(k => {
+        <Content>
+          <Card>
+            {/* <Text>{JSON.stringify(challengeModel)}</Text> */}
+            {Object.entries(challengeModel).map(([k, v]) => {
+              return this.renderItems(k, v);
+            })}
+            {/* {Object.keys(challengeModel).map(k => {
               return challengeModel[k].type == 'picker' ? (
                 <CustomPicker key={k} s={k} val={challengeModel[k]} />
               ) : null;
-            })}
-          </Form>
+            })} */}
+          </Card>
         </Content>
         <FooterButton
           disabled={this.isDisabled()}
@@ -106,5 +104,21 @@ class ChallengeNew extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  segment: {
+    backgroundColor: 'white',
+    width: '100%'
+  },
+  segmentButton: {
+    flex: 1,
+    padding: 0,
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
+  segmentText: {
+    fontSize: 10
+  }
+});
 
 export default ChallengeNew;

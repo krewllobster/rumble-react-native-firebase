@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-
+import { StyleSheet } from 'react-native';
 import {
   Container,
   Text,
@@ -30,7 +30,8 @@ class ChallengeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fabActive: false
+      fabActive: false,
+      searchString: ''
     };
   }
 
@@ -46,45 +47,89 @@ class ChallengeList extends Component {
 
   renderChallenge = ({ challenge, index, onPress }) => {
     const { id, name, createdBy } = challenge;
+    const { users, uid } = this.props;
     return (
-      <ListItem onPress={() => onPress()} first={index == 0} key={id} avatar>
-        <Left>
-          <Thumbnail source={require('../assets/flag-1095057_640.png')} />
-        </Left>
-        <Body>
+      <Card key={id} style={styles.card}>
+        <CardItem
+          style={{
+            flex: 3,
+            flexDirection: 'column',
+            alignItems: 'baseline'
+          }}
+        >
           <Text>{name}</Text>
-        </Body>
-        <Right>
-          {createdBy == this.props.uid && (
-            <Button primary small>
-              <Text>Edit</Text>
-            </Button>
-          )}
-        </Right>
-      </ListItem>
+          <Text style={styles.byline}>
+            {users && users[createdBy].username}
+          </Text>
+        </CardItem>
+        <CardItem>
+          {uid &&
+            createdBy &&
+            uid == createdBy && (
+              <Button small primary>
+                <Text>Edit</Text>
+              </Button>
+            )}
+          <Button
+            style={styles.viewButton}
+            small
+            success
+            onPress={() => onPress()}
+          >
+            <Text>View</Text>
+          </Button>
+        </CardItem>
+      </Card>
+      // {/* <Left>
+      //   <Thumbnail source={require('../assets/flag-1095057_640.png')} />
+      // </Left>
+      // <Body>
+      //   <Text>{name}</Text>
+      //   {users && (
+      //     <Text style={styles.byline}>
+      //       Created By: {users[createdBy].username}
+      //     </Text>
+      //   )}
+      // </Body>
+      // <Right>
+      //   {createdBy == this.props.uid && (
+      //     <Button primary small>
+      //       <Text>Edit</Text>
+      //     </Button>
+      //   )}
+      // </Right> */}
     );
   };
 
   render() {
     const { navigate } = this.props.navigation;
-    const { challenges } = this.props;
-
+    const { challenges, users } = this.props;
+    const { searchString } = this.state;
     return (
-      <Container>
-        <Header searchBar rounded>
-          <Item style={{ margin: 0 }}>
+      <Container style={styles.container}>
+        {/* <Header searchBar rounded> */}
+
+        {/* </Header> */}
+        {challenges && (
+          <Item>
             <Icon name="ios-search" />
-            <Input placeholder="Filter" />
+            <Input
+              onChangeText={t => this.setState({ searchString: t })}
+              clearButtonMode="while-editing"
+              placeholder="Filter"
+            />
           </Item>
-        </Header>
+        )}
         <Content>
           {!challenges ? (
             <Spinner />
           ) : (
-            <List>
+            <View>
               {challenges &&
+                users &&
                 challenges
                   .filter(c => c.companyId == this.props.activeCompany)
+                  .filter(c => c.name.search(searchString) !== -1)
                   .map((item, index) =>
                     this.renderChallenge({
                       challenge: item,
@@ -96,7 +141,7 @@ class ChallengeList extends Component {
                         })
                     })
                   )}
-            </List>
+            </View>
           )}
         </Content>
 
@@ -126,12 +171,32 @@ class ChallengeList extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  byline: {
+    fontSize: 12,
+    color: 'grey'
+  },
+  container: {
+    padding: 0,
+    margin: 0
+  },
+  viewButton: {
+    marginLeft: 2
+  },
+  card: {
+    flexDirection: 'row',
+    shadowRadius: -5,
+    margin: 0
+  }
+});
+
 export default compose(
   firestoreConnect(['challenges', 'users']),
   connect((state, props) => ({
     challenges: state.firestore.ordered.challenges,
     activeCompany: state.activeCompany.activeCompany,
-    uid: state.auth.uid
+    uid: state.auth.uid,
+    users: state.firestore.data.users
   }))
 )(ChallengeList);
 // export default ChallengeList;

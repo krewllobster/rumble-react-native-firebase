@@ -31,30 +31,32 @@ import FooterButton from '../Lib/FooterButton';
 const CheckList = ({ activities, onPress }) => {
   return (
     <Content>
-      {activities.map(([k, v]) => {
-        return (
-          <View key={`${k}${v.value}`}>
-            <Separator>
-              <Text>{k.toUpperCase()}</Text>
-            </Separator>
-            {v.map((i, index) => (
-              <ListItem key={i.label} last={index == v.length - 1}>
-                <Body>
-                  <Text>{i.label}</Text>
-                </Body>
-                <Right style={{ width: 100 }}>
-                  <Switch
-                    onValueChange={() =>
-                      onPress({ activity: k, measureType: i.value })
-                    }
-                    value={i.selected}
-                  />
-                </Right>
-              </ListItem>
-            ))}
-          </View>
-        );
-      })}
+      <Card>
+        {activities.map(([k, v]) => {
+          return (
+            <View key={`${k}${v.value}`}>
+              <Separator>
+                <Text>{k.toUpperCase()}</Text>
+              </Separator>
+              {v.map((i, index) => (
+                <ListItem key={i.label} last={index == v.length - 1}>
+                  <Body>
+                    <Text>{i.label}</Text>
+                  </Body>
+                  <Right style={{ width: 100 }}>
+                    <Switch
+                      onValueChange={() =>
+                        onPress({ activity: k, measureType: i.value })
+                      }
+                      value={i.selected}
+                    />
+                  </Right>
+                </ListItem>
+              ))}
+            </View>
+          );
+        })}
+      </Card>
     </Content>
   );
 };

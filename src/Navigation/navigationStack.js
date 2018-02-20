@@ -20,6 +20,7 @@ import AddDescription from '../testComponents/AddDescription';
 import SubmitChallenge from '../testContainers/SubmitChallenge';
 import CompanyList from '../testComponents/CompanyList';
 import ChallengeAbout from '../testComponents/challenge/ChallengeAbout';
+import ChallengeParticipants from '../testComponents/challenge/ChallengeParticipants';
 
 const mainTabs = TabNavigator(
   {
@@ -70,14 +71,14 @@ const challengeTabs = TabNavigator(
     leaderboard: {
       screen: ChallengeDetail,
       navigationOptions: {
-        title: 'Leaders',
+        title: 'Standings',
         headerTitleStyle: {
           fontSize: 10
         }
       }
     },
     people: {
-      screen: ChallengeDetail,
+      screen: ChallengeParticipants,
       navigationOptions: {
         title: 'Participants'
       }
@@ -89,7 +90,11 @@ const challengeTabs = TabNavigator(
     activeTintColor: '#0044af',
     tabBarOptions: {
       showIcon: true,
-      showLabel: true
+      showLabel: true,
+      footerStyle: {
+        backgroundColor: '#6F0F58'
+      },
+      footerTintColor: '#fff'
     }
   }
 );

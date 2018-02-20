@@ -8,7 +8,8 @@ import {
   Input,
   Label,
   Footer,
-  FooterTab
+  FooterTab,
+  Card
 } from 'native-base';
 import { withFirestore } from 'react-redux-firebase';
 import FooterButton from '../Lib/FooterButton';
@@ -18,9 +19,16 @@ class AddDescription extends Component {
     super(props);
     this.state = {
       name: '',
-      description: ''
+      description: '',
+      startDate: '01/01/2019'
     };
   }
+
+  updateStartDate = text => {
+    this.setState({
+      startDate: text
+    });
+  };
 
   updateDescription = text => {
     this.setState({ description: text });
@@ -34,55 +42,53 @@ class AddDescription extends Component {
     submitChallenge({ ...challenge, name, description });
   };
 
-  // handleSubmit = () => {
-  //   const { firestore } = this.props;
-  //   this.setState({ response: JSON.stringify(Object.keys(firestore)) });
-  //   const { name, description } = this.state;
-  //   const { navigate } = this.props.navigation;
-  //   const { challenge } = this.props.navigation.state.params;
-  //   firestore
-  //     .add('challenges', { ...challenge, name, description })
-  //     .then(response => {
-  //       const id = response._documentPath._parts[1];
-  //       navigate('ChallengeDetail', { id });
-  //     });
-  // };
-
   render() {
-    const { name, description } = this.state;
+    const { name, description, startDate } = this.state;
     return (
       <Container>
         <Content>
-          <Text>{this.state.response || null}</Text>
-          <Form>
-            <Item floatingLabel>
-              <Label>Name</Label>
-              <Input
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                autoCapitalize="words"
-                value={name}
-                onChangeText={text => this.setState({ name: text })}
-              />
-            </Item>
-            <Item floatingLabel last>
-              <Label>
-                Description{' '}
-                {description.length > 0
-                  ? `(${150 - description.length} chars remaining)`
-                  : null}
-              </Label>
-              <Input
-                autoCorrect={false}
-                returnKeyType="done"
-                enablesReturnKeyAutomatically
-                clearButtonMode="while-editing"
-                maxLength={150}
-                value={description}
-                onChangeText={this.updateDescription}
-              />
-            </Item>
-          </Form>
+          <Card style={{ height: '100%' }}>
+            <Form>
+              <Item floatingLabel>
+                <Label>Name</Label>
+                <Input
+                  autoCorrect={false}
+                  clearButtonMode="while-editing"
+                  autoCapitalize="words"
+                  value={name}
+                  onChangeText={text => this.setState({ name: text })}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>
+                  Description{' '}
+                  {description.length > 0
+                    ? `(${150 - description.length} chars remaining)`
+                    : null}
+                </Label>
+                <Input
+                  autoCorrect={false}
+                  returnKeyType="done"
+                  enablesReturnKeyAutomatically
+                  clearButtonMode="while-editing"
+                  maxLength={150}
+                  value={description}
+                  onChangeText={this.updateDescription}
+                />
+              </Item>
+              <Item floatingLabel last>
+                <Label>Start Date</Label>
+                <Input
+                  autoCorrect={false}
+                  returnKeyType="done"
+                  enablesReturnKeyAutomatically
+                  clearButtonMode="while-editing"
+                  value={startDate}
+                  onChangeText={this.updateStartDate}
+                />
+              </Item>
+            </Form>
+          </Card>
         </Content>
         <FooterButton
           text="Submit Challenge"

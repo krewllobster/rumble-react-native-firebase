@@ -32,7 +32,7 @@ export const submitChallenge = challenge => {
         dispatch(
           NavigationActions.navigate({
             routeName: 'ChallengeDetail',
-            params: { id }
+            params: { id, name: challengeToSubmit.name }
           })
         );
       });

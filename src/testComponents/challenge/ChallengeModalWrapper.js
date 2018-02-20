@@ -36,7 +36,7 @@ import {
 } from 'react-native';
 import ActionButton from 'react-native-action-button';
 
-class ChallengeDetail extends Component {
+class ChallengeModalWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,25 +51,6 @@ class ChallengeDetail extends Component {
       }
     };
   }
-
-  static navigationOptions = ({ navigation }) => {
-    const { name } = navigation.state.params;
-    return {
-      title: !!name ? name : 'no title',
-      headerStyle: {
-        backgroundColor: '#6F0F58'
-      },
-      headerTintColor: '#fff',
-      headerLeft: (
-        <Button transparent onPress={() => navigation.navigate('Challenges')}>
-          <Icon name="ios-close" color={'white'} />
-        </Button>
-      ),
-      tabBarIcon: ({ focused, tintColor }) => {
-        return <Icon name="create" tintColor={'#fff'} />;
-      }
-    };
-  };
 
   updateActivity(data) {
     this.setState(prevState => ({
@@ -184,68 +165,10 @@ class ChallengeDetail extends Component {
   };
 
   render() {
-    const { challenge, users, navigation } = this.props;
-    if (!challenge) {
-      return <Spinner />;
-    }
     return (
       <Container style={styles.mainContainer}>
-        <StatusBar barStyle="light-content" />
         {this.renderModal()}
-        <Card transparent style={styles.descriptionCard}>
-          <CardItem bordered style={styles.descriptionCard}>
-            <Body>
-              <Text style={styles.descriptionText}>
-                {challenge.description}
-              </Text>
-            </Body>
-          </CardItem>
-          <CardItem
-            footer
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Text style={styles.byline}>
-              Created By: {users[challenge.createdBy].username}
-            </Text>
-            <Text style={styles.byline}>Starts: 01/01/2019</Text>
-          </CardItem>
-        </Card>
-
-        <Body style={{ flex: 0 }}>
-          <Text style={styles.activityText}>Featured Activities</Text>
-          <View style={styles.actionContainer}>
-            {challenge &&
-              challenge.activityTypes.map((t, i) => {
-                return (
-                  <Button
-                    key={i}
-                    small
-                    transparent
-                    disabled
-                    bordered
-                    style={styles.actionButton}
-                  >
-                    <Text style={styles.actionText}>
-                      {t.activity} - {t.measureType}
-                    </Text>
-                  </Button>
-                );
-              })}
-          </View>
-        </Body>
-        <Card transparent style={{ flex: 1 }}>
-          <CardItem header>
-            <Text>Recent Activity</Text>
-          </CardItem>
-          {challenge && challenge.activities ? (
-            <Text>Activities Here</Text>
-          ) : (
-            <CardItem>
-              <Text>No one has posted any activities</Text>
-            </CardItem>
-          )}
-        </Card>
-        {/* </Content> */}
+        {this.children}
         <ActionButton buttonColor="#6F0F58">
           {challenge.activityTypes.map((type, i) => {
             return (
@@ -354,14 +277,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = (state, ownProps) => {
-  const { id } = ownProps.navigation.state.params;
-  return {
-    challenge:
-      !!state.firestore.data.challenges[id] &&
-      state.firestore.data.challenges[id],
-    users: state.firestore.data.users
-  };
-};
-
-export default connect(mapStateToProps)(ChallengeDetail);
+export default ChallengeModalWrapper;
