@@ -80,24 +80,6 @@ class ChallengeList extends Component {
           </Button>
         </CardItem>
       </Card>
-      // {/* <Left>
-      //   <Thumbnail source={require('../assets/flag-1095057_640.png')} />
-      // </Left>
-      // <Body>
-      //   <Text>{name}</Text>
-      //   {users && (
-      //     <Text style={styles.byline}>
-      //       Created By: {users[createdBy].username}
-      //     </Text>
-      //   )}
-      // </Body>
-      // <Right>
-      //   {createdBy == this.props.uid && (
-      //     <Button primary small>
-      //       <Text>Edit</Text>
-      //     </Button>
-      //   )}
-      // </Right> */}
     );
   };
 
@@ -107,9 +89,6 @@ class ChallengeList extends Component {
     const { searchString } = this.state;
     return (
       <Container style={styles.container}>
-        {/* <Header searchBar rounded> */}
-
-        {/* </Header> */}
         {challenges && (
           <Item>
             <Icon name="ios-search" />
@@ -191,7 +170,10 @@ const styles = StyleSheet.create({
 });
 
 export default compose(
-  firestoreConnect(['challenges', 'users']),
+  firestoreConnect(props => {
+    console.log(props);
+    return ['challenges', 'users'];
+  }),
   connect((state, props) => ({
     challenges: state.firestore.ordered.challenges,
     activeCompany: state.activeCompany.activeCompany,

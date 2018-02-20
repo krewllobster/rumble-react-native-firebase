@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-
+import { submitActivity } from '../../Actions/submitActivityThunk';
 import {
   Container,
   Content,
@@ -52,6 +52,13 @@ class ChallengeModalWrapper extends Component {
     };
   }
 
+  isSumbitDisabled() {
+    const {
+      newActivity: { count, activity, measureType, difficulty, comment }
+    } = this.state;
+    return !count || !activity || !measureType || !difficulty;
+  }
+
   updateActivity(data) {
     this.setState(prevState => ({
       newActivity: { ...prevState.newActivity, ...data }
@@ -60,17 +67,31 @@ class ChallengeModalWrapper extends Component {
 
   closeModal() {
     this.setState({ modalVisible: false });
+    this.updateActivity({
+      activity: '',
+      measureType: '',
+      count: undefined,
+      difficulty: 2,
+      comment: undefined
+    });
   }
 
   openModal({ activity, measureType }) {
-    this.setState(prevState => ({
-      modalVisible: true,
-      newActivity: {
-        ...prevState.newActivity,
-        activity,
-        measureType
-      }
-    }));
+    this.setState({ modalVisible: true });
+    this.updateActivity({ activity, measureType });
+  }
+
+  submitActivity() {
+    const newActivity = {
+      ...this.state.newActivity,
+      createdAt: new Date(),
+      challenges: {
+        [this.props.challenge.id]: true
+      },
+      createdBy: this.props.auth.uid,
+      companyId: this.props.challenge.companyId
+    };
+    this.props.submitActivity(newActivity).then(() => this.closeModal());
   }
 
   renderModal = () => {
@@ -94,6 +115,7 @@ class ChallengeModalWrapper extends Component {
           </CardItem>
           <CardItem bordered style={styles.inputItem}>
             <Input
+              autoFocus={true}
               autoCorrect={false}
               keyboardType="decimal-pad"
               value={count}
@@ -155,7 +177,13 @@ class ChallengeModalWrapper extends Component {
             >
               <Text style={styles.cancelText}>Cancel</Text>
             </Button>
-            <Button block primary style={styles.formButtonSubmit}>
+            <Button
+              onPress={() => this.submitActivity()}
+              block
+              primary
+              disabled={this.isSumbitDisabled()}
+              style={styles.formButtonSubmit}
+            >
               <Text>Log Activity</Text>
             </Button>
           </CardItem>
@@ -168,9 +196,9 @@ class ChallengeModalWrapper extends Component {
     return (
       <Container style={styles.mainContainer}>
         {this.renderModal()}
-        {this.children}
+        {this.props.children}
         <ActionButton buttonColor="#6F0F58">
-          {challenge.activityTypes.map((type, i) => {
+          {this.props.challenge.activityTypes.map((type, i) => {
             return (
               <ActionButton.Item
                 key={i}
@@ -277,4 +305,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ChallengeModalWrapper;
+const mapStateToProps = (state, ownProps) => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = {
+  submitActivity
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ChallengeModalWrapper
+);

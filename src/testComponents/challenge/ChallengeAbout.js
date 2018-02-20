@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-
+import { firestoreConnect, getVal } from 'react-redux-firebase';
+import ChallengeModalWrapper from './ChallengeModalWrapper';
 import {
-  Container,
   Content,
   Text,
   Button,
@@ -13,43 +13,21 @@ import {
   Form,
   Item,
   Label,
-  Input,
   Title,
   Spinner,
   Icon,
-  Fab,
   Header,
   Left,
-  SafeAreaView,
   Right,
-  Segment,
-  Footer,
-  FooterTab
+  Badge
 } from 'native-base';
-import Modal from 'react-native-modal';
-import {
-  View,
-  StyleSheet,
-  StatusBar,
-  Image,
-  ImageBackground
-} from 'react-native';
-import ActionButton from 'react-native-action-button';
+import { View, StyleSheet, StatusBar } from 'react-native';
+import ActivitySummary from '../activity/ActivitySummary';
 
 class ChallengeDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      fabActive: false,
-      modalVisible: false,
-      newActivity: {
-        count: undefined,
-        activity: undefined,
-        measureType: undefined,
-        difficulty: '2',
-        comment: ''
-      }
-    };
+    this.state = {};
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -71,202 +49,92 @@ class ChallengeDetail extends Component {
     };
   };
 
-  updateActivity(data) {
-    this.setState(prevState => ({
-      newActivity: { ...prevState.newActivity, ...data }
-    }));
-  }
-
-  closeModal() {
-    this.setState({ modalVisible: false });
-  }
-
-  openModal({ activity, measureType }) {
-    this.setState(prevState => ({
-      modalVisible: true,
-      newActivity: {
-        ...prevState.newActivity,
-        activity,
-        measureType
-      }
-    }));
-  }
-
-  renderModal = () => {
-    const {
-      modalVisible,
-      newActivity: { count, comment, activity, measureType, difficulty }
-    } = this.state;
-    return (
-      <Modal
-        onBackdropPress={() => this.closeModal()}
-        onBackButtonPress={() => this.closeModal()}
-        avoidKeyboard
-        isVisible={modalVisible}
-      >
-        <Card style={{ flex: 0 }}>
-          <CardItem header>
-            <Text>Log an Activity</Text>
-          </CardItem>
-          <CardItem>
-            <Text>How many {measureType}s?</Text>
-          </CardItem>
-          <CardItem bordered style={styles.inputItem}>
-            <Input
-              autoCorrect={false}
-              keyboardType="decimal-pad"
-              value={count}
-              placeholder={'0'}
-              autoCapitalize={'characters'}
-              onChangeText={t => this.updateActivity({ count: t })}
-            />
-          </CardItem>
-          <CardItem>
-            <Text>Any thoughts you'd like to share?</Text>
-          </CardItem>
-          <CardItem bordered style={styles.inputItem}>
-            <Input
-              autoCorrect={false}
-              value={comment}
-              onChangeText={t => this.updateActivity({ comment: t })}
-            />
-          </CardItem>
-          <CardItem>
-            <Text>How difficult was this?</Text>
-          </CardItem>
-          <CardItem style={styles.inputItem}>
-            <Segment style={styles.difficultySegment}>
-              {['1', '2', '3'].map((v, i) => {
-                return (
-                  <Button
-                    style={
-                      difficulty == v
-                        ? styles.difficultyButtonActive
-                        : styles.difficultyButtonInactive
-                    }
-                    key={i}
-                    first={i == 0}
-                    last={i == 2}
-                    active={difficulty == v}
-                    onPress={() => this.updateActivity({ difficulty: v })}
-                  >
-                    <Text
-                      style={
-                        difficulty == v
-                          ? styles.difficultyTextActive
-                          : styles.difficultyTextInactive
-                      }
-                    >
-                      {v}
-                    </Text>
-                  </Button>
-                );
-              })}
-            </Segment>
-          </CardItem>
-          <CardItem style={styles.formButtonContainer}>
-            <Button
-              onPress={() => this.closeModal()}
-              bordered
-              transparent
-              block
-              style={styles.formButtonCancel}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </Button>
-            <Button block primary style={styles.formButtonSubmit}>
-              <Text>Log Activity</Text>
-            </Button>
-          </CardItem>
-        </Card>
-      </Modal>
-    );
-  };
-
   render() {
-    const { challenge, users, navigation } = this.props;
+    const { activities, challenge, users, navigation } = this.props;
+    console.log(activities);
     if (!challenge) {
       return <Spinner />;
     }
     return (
-      <Container style={styles.mainContainer}>
-        <StatusBar barStyle="light-content" />
-        {this.renderModal()}
-        <Card transparent style={styles.descriptionCard}>
-          <CardItem bordered style={styles.descriptionCard}>
-            <Body>
-              <Text style={styles.descriptionText}>
-                {challenge.description}
+      <ChallengeModalWrapper
+        challenge={{ ...challenge, id: this.props.navigation.state.params.id }}
+      >
+        <Content>
+          <StatusBar barStyle="light-content" />
+          <Card transparent style={styles.descriptionCard}>
+            <CardItem bordered style={styles.descriptionCard}>
+              <Body>
+                <Text style={styles.descriptionText}>
+                  {challenge.description}
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem
+              footer
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <Text style={styles.byline}>
+                Created By: {users[challenge.createdBy].username}
               </Text>
-            </Body>
-          </CardItem>
-          <CardItem
-            footer
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Text style={styles.byline}>
-              Created By: {users[challenge.createdBy].username}
-            </Text>
-            <Text style={styles.byline}>Starts: 01/01/2019</Text>
-          </CardItem>
-        </Card>
+              <Text style={styles.byline}>Starts: 01/01/2019</Text>
+            </CardItem>
+          </Card>
 
-        <Body style={{ flex: 0 }}>
-          <Text style={styles.activityText}>Featured Activities</Text>
-          <View style={styles.actionContainer}>
-            {challenge &&
-              challenge.activityTypes.map((t, i) => {
+          <Body style={{ flex: 0 }}>
+            <Text style={styles.activityText}>Featured Activities</Text>
+            <View style={styles.actionContainer}>
+              {challenge &&
+                challenge.activityTypes.map((t, i) => {
+                  return (
+                    <Badge style={styles.actionBadge}>
+                      <Text style={styles.actionText}>
+                        {t.activity} - {t.measureType}
+                      </Text>
+                    </Badge>
+                    // <Button
+                    //   key={i}
+                    //   small
+                    //   transparent
+                    //   disabled
+                    //   bordered
+                    //   style={styles.actionButton}
+                    // >
+                    //   <Text style={styles.actionText}>
+                    //     {t.activity} - {t.measureType}
+                    //   </Text>
+                    // </Button>
+                  );
+                })}
+            </View>
+          </Body>
+          <Card transparent style={{ flex: 1 }}>
+            <CardItem header>
+              <Text>Recent Activity</Text>
+            </CardItem>
+            {(!challenge || !activities) && (
+              <CardItem>
+                <Text>No one has posted any activities</Text>
+              </CardItem>
+            )}
+            {activities &&
+              activities.map(a => {
+                console.log(a);
                 return (
-                  <Button
-                    key={i}
-                    small
-                    transparent
-                    disabled
-                    bordered
-                    style={styles.actionButton}
-                  >
-                    <Text style={styles.actionText}>
-                      {t.activity} - {t.measureType}
-                    </Text>
-                  </Button>
+                  <ActivitySummary
+                    user={users[a.createdBy]}
+                    activity={a}
+                    key={a.id}
+                  />
                 );
               })}
-          </View>
-        </Body>
-        <Card transparent style={{ flex: 1 }}>
-          <CardItem header>
-            <Text>Recent Activity</Text>
-          </CardItem>
-          {challenge && challenge.activities ? (
-            <Text>Activities Here</Text>
-          ) : (
-            <CardItem>
-              <Text>No one has posted any activities</Text>
-            </CardItem>
-          )}
-        </Card>
-        {/* </Content> */}
-        <ActionButton buttonColor="#6F0F58">
-          {challenge.activityTypes.map((type, i) => {
-            return (
-              <ActionButton.Item
-                key={i}
-                size={35}
-                buttonColor={'#6F0F58'}
-                title={`${type.activity} - ${type.measureType}s`}
-                onPress={() =>
-                  this.openModal({
-                    activity: type.activity,
-                    measureType: type.measureType
-                  })
-                }
-              >
-                <Icon name="ios-add" style={{ color: 'white' }} />
-              </ActionButton.Item>
-            );
-          })}
-        </ActionButton>
-      </Container>
+            {/* {challenge &&
+              activities &&
+              activities.sort((a, b) => b.createdAt - a.createdAt).map(a => {
+                return <ActivitySummary activity={a} key={a.id} />;
+              })} */}
+          </Card>
+        </Content>
+      </ChallengeModalWrapper>
     );
   }
 }
@@ -323,11 +191,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center'
   },
-  actionButton: {
+  actionBadge: {
     margin: 2,
     padding: 0,
     backgroundColor: '#6F0F58',
-    borderColor: 'white'
+    borderColor: 'white',
+    borderWidth: 1
   },
   actionText: {
     fontSize: 11,
@@ -360,8 +229,17 @@ const mapStateToProps = (state, ownProps) => {
     challenge:
       !!state.firestore.data.challenges[id] &&
       state.firestore.data.challenges[id],
+    activities: state.firestore.ordered.activities,
     users: state.firestore.data.users
   };
 };
 
-export default connect(mapStateToProps)(ChallengeDetail);
+export default compose(
+  firestoreConnect(props => [
+    {
+      collection: 'activities',
+      where: [[`challenges.${props.navigation.state.params.id}`, '==', true]]
+    }
+  ]),
+  connect(mapStateToProps)
+)(ChallengeDetail);
