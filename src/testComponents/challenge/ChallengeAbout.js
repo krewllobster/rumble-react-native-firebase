@@ -50,8 +50,7 @@ class ChallengeDetail extends Component {
   };
 
   render() {
-    const { activities, challenge, users, navigation } = this.props;
-    console.log(activities);
+    const { activities, challenge, users, navigation, uid } = this.props;
     if (!challenge) {
       return <Spinner />;
     }
@@ -86,23 +85,11 @@ class ChallengeDetail extends Component {
               {challenge &&
                 challenge.activityTypes.map((t, i) => {
                   return (
-                    <Badge style={styles.actionBadge}>
+                    <Badge key={i} style={styles.actionBadge}>
                       <Text style={styles.actionText}>
                         {t.activity} - {t.measureType}
                       </Text>
                     </Badge>
-                    // <Button
-                    //   key={i}
-                    //   small
-                    //   transparent
-                    //   disabled
-                    //   bordered
-                    //   style={styles.actionButton}
-                    // >
-                    //   <Text style={styles.actionText}>
-                    //     {t.activity} - {t.measureType}
-                    //   </Text>
-                    // </Button>
                   );
                 })}
             </View>
@@ -118,20 +105,15 @@ class ChallengeDetail extends Component {
             )}
             {activities &&
               activities.map(a => {
-                console.log(a);
                 return (
                   <ActivitySummary
-                    user={users[a.createdBy]}
+                    createdBy={users[a.createdBy]}
+                    currentUser={uid}
                     activity={a}
                     key={a.id}
                   />
                 );
               })}
-            {/* {challenge &&
-              activities &&
-              activities.sort((a, b) => b.createdAt - a.createdAt).map(a => {
-                return <ActivitySummary activity={a} key={a.id} />;
-              })} */}
           </Card>
         </Content>
       </ChallengeModalWrapper>
@@ -229,8 +211,9 @@ const mapStateToProps = (state, ownProps) => {
     challenge:
       !!state.firestore.data.challenges[id] &&
       state.firestore.data.challenges[id],
-    activities: state.firestore.ordered.activities,
-    users: state.firestore.data.users
+    activities: state.firestore.ordered[`${id}/activities`],
+    users: state.firestore.data.users,
+    uid: state.auth.uid
   };
 };
 
@@ -238,7 +221,8 @@ export default compose(
   firestoreConnect(props => [
     {
       collection: 'activities',
-      where: [[`challenges.${props.navigation.state.params.id}`, '==', true]]
+      where: [[`challenges.${props.navigation.state.params.id}`, '==', true]],
+      storeAs: `${props.navigation.state.params.id}/activities`
     }
   ]),
   connect(mapStateToProps)

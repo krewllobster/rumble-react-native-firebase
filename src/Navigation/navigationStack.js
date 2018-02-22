@@ -65,7 +65,18 @@ const challengeTabs = TabNavigator(
       screen: ChallengeAbout,
       navigationOptions: {
         title: 'About',
-        tabBarIcon: <Icon name="people" />
+        tabBarIcon: ({ focused, tintColor }) => {
+          const iconName = focused
+            ? 'ios-information-circle'
+            : 'ios-information-circle-outline';
+          return (
+            <Icon
+              name={iconName}
+              style={{ color: '#6F0F58' }}
+              tintColor={'#fff'}
+            />
+          );
+        }
       }
     },
     leaderboard: {
@@ -74,6 +85,9 @@ const challengeTabs = TabNavigator(
         title: 'Standings',
         headerTitleStyle: {
           fontSize: 10
+        },
+        tabBarIcon: ({ focused, tintColor }) => {
+          return <Icon name="create" tintColor={'#fff'} />;
         }
       }
     },
@@ -81,13 +95,17 @@ const challengeTabs = TabNavigator(
       screen: ChallengeParticipants,
       navigationOptions: {
         title: 'Participants'
+      },
+      tabBarIcon: ({ focused, tintColor }) => {
+        const iconName = focused ? 'ios-people' : 'ios-people-outline';
+        return <Icon name="create" tintColor={'#fff'} />;
       }
     }
   },
   {
     swipeEnabled: true,
     animationEnabled: false,
-    activeTintColor: '#0044af',
+    activeTintColor: '#6F0F58',
     tabBarOptions: {
       showIcon: true,
       showLabel: true,

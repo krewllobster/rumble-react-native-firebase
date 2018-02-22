@@ -49,7 +49,7 @@ class ChallengeList extends Component {
     const { id, name, createdBy } = challenge;
     const { users, uid } = this.props;
     return (
-      <Card key={id} style={styles.card}>
+      <Card key={id} style={styles.card} transparent>
         <CardItem
           style={{
             flex: 3,
@@ -93,6 +93,7 @@ class ChallengeList extends Component {
           <Item>
             <Icon name="ios-search" />
             <Input
+              autoCorrect={false}
               onChangeText={t => this.setState({ searchString: t })}
               clearButtonMode="while-editing"
               placeholder="Filter"
